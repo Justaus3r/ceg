@@ -43,7 +43,10 @@ There are multiple ways to install ceg, the simplest one being installing from P
 ::
 
     # py instead of python3 on windows
-    python3 -m pip install ceg
+    # Please be sure to use the -U tag to install
+    # the latest version as builds are automatically done at github
+    # and all patches are pushed to new releases.
+    python3 -m pip install -U ceg
 
 
 You can also install it manually. for that, you need to have poetry_ installed and be on a system with a minimal python version being ``3.7``.after installing poetry, you can just do ``poetry build`` and pip install from ``dist/ceg*.whl`` or whatever you prefer. however please be mindful that installing poetry from pip is `not recommended`_. 
@@ -166,7 +169,15 @@ You can report all issues/feature requests at `GitHub bug tracker`_.
 
 Contribution
 ------------
-All kinds of contributions are welcomed. though please be mindful that this project is statically typed and uses black formatting so please type-check(using ``mypy``) before a PR. I haven't yet added ``py.typed``, nor is the project type-checked at installation or any workflows setup to do so because I am too lazy. tho I plan to do that. also, note that
+.. |strikestart| raw:: html
+
+    <strike>
+
+.. |strikeexit| raw:: html
+
+    </strike>
+    
+All kinds of contributions are welcomed. though please be mindful that this project is statically typed and uses black formatting so please type-check(using ``mypy``) before a PR. I haven't yet added ``py.typed``, nor is the project type-checked at installation |strikestart| or any workflows setup to do so |strikeexit| (now we actually do type checking using workflow) because I am too lazy. tho I plan to do that. also, note that
 `conventional commits`_ and `semantic versioning`_ are used for git commits/versioning.
 
 License
