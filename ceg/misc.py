@@ -57,7 +57,7 @@ sub-arguments:
 
 For more usage help, check out https://www.github.com/justaus3r/ceg/#examples"""
     DESCRIPTION: str = "A simple gist crud utility."
-    VERSION: str = "0.1.0"
+    VERSION: str = "0.1.1"
 
 
 def exception_executioner(exception_obj) -> None:

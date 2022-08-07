@@ -36,7 +36,7 @@ from typing import List, Tuple, Dict, Optional, Union, Callable, Any, no_type_ch
 
 console: Console = Console()
 
-__all__ = ("Ceg", )
+__all__ = ("Ceg",)
 
 
 class AuxSequence(List):
@@ -199,6 +199,7 @@ class Ceg:
         end_point: Optional[str] = None,
         header: Optional[Dict[str, str]] = None,
         params: Optional[str] = None,
+        no_header: bool = False,
     ) -> Union[int, List[Dict[str, Union[str, Dict[str, str], None, bool, int]]]]:
         """sends the actual http request with params
 
@@ -217,8 +218,10 @@ class Ceg:
         if header is None:
             header = self.header
         http_operation = getattr(requests, self.http_operation)
-        response: requests.models.Response = http_operation(
-            url=end_point, data=params, headers=header
+        response: requests.models.Response = (
+            http_operation(url=end_point, data=params, headers=header)
+            if not no_header
+            else http_operation(url=end_point, data=params)
         )
         self.response_status_str = self.__response_validator(response)
         return_var: Union[
@@ -266,7 +269,10 @@ class Ceg:
         return response_str
 
     def list(
-        self, end_point: Optional[str] = None, header: Optional[Dict[str, str]] = None
+        self,
+        end_point: Optional[str] = None,
+        header: Optional[Dict[str, str]] = None,
+        no_header: bool = False,
     ) -> Optional[List[Dict[str, str]]]:
         """lists public/private gists for authenticated user.
 
@@ -287,7 +293,11 @@ class Ceg:
 
         hashtable_response: Union[
             int, List[Dict[str, Union[str, Dict[str, str], None, bool, int]]]
-        ] = self.__send_http_request(end_point, header)
+        ] = (
+            self.__send_http_request(end_point, header)
+            if not no_header
+            else self.__send_http_request(end_point, no_header=True)
+        )
 
         write_stdout: WriteStdout = WriteStdout(self.to_stdout)
         for gist_no, gist_hashtable in enumerate(hashtable_response):  # type: ignore
@@ -498,7 +508,7 @@ class Ceg:
             (Optionally) returns a list containing all gists.
         """
         user_gist_info: Optional[List[Dict[str, str]]] = self.list(
-            end_point=f"https://api.github.com/users/{self.arg_val}/gists", header=None
+            end_point=f"https://api.github.com/users/{self.arg_val}/gists", no_header=True 
         )
         if not self.to_stdout:
             return user_gist_info
