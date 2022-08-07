@@ -67,10 +67,6 @@ jobs:
       - run: |
             python3 -m pip install mypy poetry rich
             poetry install
-            mypy $GITHUB_WORKSPACE/ceg
-            if [[ $? -ne 0 ]];then
-              mypy --install-types
-              mypy $GITHUB_WORKSPACE/ceg
-            fi
+            mypy $GITHUB_WORKSPACE/ceg --install-types --non-interactive
             poetry publish --build
         shell: 'bash'
