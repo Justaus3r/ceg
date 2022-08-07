@@ -64,8 +64,9 @@ jobs:
         with:
           python-version: '3.8'
       - run: |
-            python3 -m pip install mypy poetry
+            python3 -m pip install mypy poetry rich
             poetry install
+            mypy --install-types
             mypy $GITHUB_WORKSPACE/ceg
             poetry publish --build
         shell: 'bash'
