@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+
+printf "Uninstalling ceg...\n"
+yes| python3 -m pip uninstall ceg
+printf "Done!"
+
+# vim: filetype=sh

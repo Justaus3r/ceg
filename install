@@ -1,0 +1,12 @@
+#! /usr/bin/env bash
+
+printf "Building and installing ceg...\n"
+poetry build
+cd dist
+python3 -m pip install *.whl
+cd ../
+rm -r dist
+printf "Done!"
+
+
+# vim: filetype=sh
