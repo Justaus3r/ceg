@@ -22,7 +22,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """ Enhanced Logger for Ceg """
 
-import sys
 import logging
 from rich.logging import RichHandler
 from typing import Union, Any, no_type_check

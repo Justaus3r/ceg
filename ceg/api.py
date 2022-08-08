@@ -81,7 +81,7 @@ Api Reference
 """
 
 from .ceg import Ceg
-from typing import List, Tuple, Dict, Optional
+from typing import List , Dict, Optional
 
 
 class CegApi:

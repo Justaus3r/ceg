@@ -22,13 +22,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """ Main cli """
 
-import os
 import sys
-import requests
 from .ceg import Ceg
-from .misc import UtilInfo, Misc
+from .misc import Misc
 from .arg_parser import ArgumentParser
-from typing import Tuple, List, Dict, Callable, Union, Optional, Any
+from typing import List, Dict, Callable, Union, Optional, Any
 
 
 def ceg_cli() -> None:

@@ -26,7 +26,7 @@ import os
 import platform
 import subprocess
 from .exceptions import CegExceptions
-from typing import List, Tuple, Dict, Callable, Union, Optional, Type, TypeAlias
+from typing import List, Dict, Callable, Union, Optional, Type, TypeAlias
 
 __all__ = ("UtilInfo", "Misc")
 
