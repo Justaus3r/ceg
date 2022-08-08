@@ -57,8 +57,7 @@ jobs:
   Typecheck-And-Pubish-Release-To-Pypi:
     runs-on: ubuntu-latest
     needs:
-      # Create-Tag-And-Release
-      Extract-tags
+      Create-Tag-And-Release
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
