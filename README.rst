@@ -184,7 +184,7 @@ License
 -------
 This project is distributed under "GNU General Public License v3.0",and can be distributed with its later versions.
 
-.. _`Api documentation`: https://github.com
+.. _`Api documentation`: https://justaus3r.github.io/ceg/ceg.html
 .. _PYPI: https://pypi.org
 .. _poetry: https://python-poetry.org/docs/master/#installing-with-the-official-installer
 .. _`not recommended`: https://python-poetry.org/docs/#alternative-installation-methods-not-recommended
