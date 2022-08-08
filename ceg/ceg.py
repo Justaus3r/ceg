@@ -30,7 +30,7 @@ from rich.tree import Tree
 from rich.console import Console
 from .exceptions import GenericReturnCodes, CegExceptions
 from .misc import Misc, FileHandler, open_file, gist_filename_validated
-from typing import List, Tuple, Dict, Optional, Union, Callable, no_type_check
+from typing import List, Tuple, Dict, Optional, Union, Callable
 
 console: Console = Console()
 
