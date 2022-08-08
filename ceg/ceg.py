@@ -549,7 +549,7 @@ class Ceg:
             return GenericReturnCodes.FAILURE
         except Exception:
             self.logger.exception(
-                "An internal exception has risen!.please open an issue for this bug"
+                "An internal exception has risen!.please open an issue if you think this is a bug"
             )
             return GenericReturnCodes.FAILURE
         else:
