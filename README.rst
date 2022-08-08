@@ -188,7 +188,7 @@ This project is distributed under "GNU General Public License v3.0",and can be d
 .. _PYPI: https://pypi.org
 .. _poetry: https://python-poetry.org/docs/master/#installing-with-the-official-installer
 .. _`not recommended`: https://python-poetry.org/docs/#alternative-installation-methods-not-recommended
-.. _`GitHub bug tracker`: https://github.com/justas3r/ceg/issues/
+.. _`GitHub bug tracker`: https://github.com/justaus3r/ceg/issues/
 .. _`conventional commits`: https://www.conventionalcommits.org/en/v1.0.0/
 .. _`semantic versioning`: https://semver.org/
 .. _`defunkt/gist`: https://github.com/defunkt/gist
