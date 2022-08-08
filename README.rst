@@ -176,6 +176,7 @@ Is ceg not your taste? well then you can try following similar projects:
 1. `defunkt/gist`_
 2. `ropensci/gistr`_ 
 3. `jswank/gister`_
+4. `hackjutsu/Lepton`_
 
 Issues
 ------
@@ -208,3 +209,4 @@ This project is distributed under "GNU General Public License v3.0",and can be d
 .. _`defunkt/gist`: https://github.com/defunkt/gist
 .. _`ropensci/gistr`: https://github.com/ropensci/gistr
 .. _`jswank/gister`: https://github.com/jswank/gister
+.. _`hackjutsu/Lepton`: https://github.com/hackjutsu/Lepton
