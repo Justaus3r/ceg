@@ -2,6 +2,20 @@
 Ceg
 ===
 
+|made-with-python-badge|  |github-license-badge|  |github-release-badge|  |pr-welcomed-badge|
+
+
+.. |made-with-python-badge| image:: https://img.shields.io/badge/Made%20with-Python-1f425f.svg
+   :target: https://www.python.org/
+   
+.. |github-license-badge| image:: https://img.shields.io/github/license/justaus3r/ceg.svg
+   :target: https://github.com/justaus3r/ceg/blob/master/LICENSE 
+
+.. |github-release-badge| image:: https://img.shields.io/github/release/justaus3r/ceg.svg
+   :target: https://github.com/justaus3r/ceg/releases
+
+.. |pr-welcomed-badge| image:: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
+   :target: https://makeapullrequest.com
 
 Overview
 ========
