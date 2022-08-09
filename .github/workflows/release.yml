@@ -68,7 +68,6 @@ jobs:
             python3 -m pip install mypy poetry rich
             poetry install
             mypy $GITHUB_WORKSPACE/ceg --install-types --non-interactive
+            echo "See \`Project's Readme <https://www.github.com/justaus3r/ceg/blob/Master/README.rst>\`_ for info" >
             poetry publish --build
-            if [[ $? -ne 0 ]];then
-                twine upload dist/* -u __token__ -p $POETRY_PYPI_TOKEN_PYPI
         shell: 'bash'
