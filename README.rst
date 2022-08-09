@@ -48,13 +48,13 @@ A gist **<c**>reate/**<r**>ead/**<u**>pdate/**<d**>elete (crud) utility(pronounc
 2. Modifying existing gist(s).
 3. Downloading gist(s). [1]_
 4. Listing public/secret gists for authenticated users as well as for unauthenticated users(only public).
-5. Deleting a gist. [2]_
+5. Deleting gist(s).
 6. Creating a local backup of all the gists(for authenticated users).
 
 ceg can also be used as a library. check out `Api documentation`_.
 
 .. [1] As of now, only files smaller than 10MB can be downloaded as allowed by GitHub API.this is planned to change once "git clone" has been implemented internally in future releases.
-.. [2] Bulk operation for deleting multiple gists for planned for next release.
+
 
 Installation
 ------------
@@ -85,39 +85,40 @@ Usage
 -----
 ::
 
-    usage: ceg [options] [sub-arguments]
+   usage: ceg [options] [sub-arguments]
 
-    A simple gist crud utility.
+   A simple gist crud utility.
 
-    options:
-      -h, --help            show this help message and exit
-      -po GISTNAME [GISTNAME ...], --post GISTNAME [GISTNAME ...]
-                            create a gist
-      -pa GISTNAME [GISTNAME ...], --patch GISTNAME [GISTNAME ...]
-                            modify an existing gist
-      -g GISTID [GISTID ...], --get GISTID [GISTID ...]
-                            Download gist(s)
-      -d GISTID, --delete GISTID
-                            remove a gist
-      -l, --list            list public/private gists for authenticated user
-      -lo USERNAME, --list-other USERNAME
-                            list public gists for unauthenticated users
-      -bk, --backup         create a backup of all gists
-      -sk SECRETKEY, --secret-key SECRETKEY
-                            user's github secret key
-      -nl, --no-logging     don't log anything to stdout
-      -v, --version         show utility's semantic version
+   options:
+   -h, --help            show this help message and exit
+   -po GISTNAME [GISTNAME ...], --post GISTNAME [GISTNAME ...]
+                        create a gist
+   -pa GISTNAME [GISTNAME ...], --patch GISTNAME [GISTNAME ...]
+                        modify an existing gist
+   -g GISTID [GISTID ...], --get GISTID [GISTID ...]
+                        Download gist(s)
+   -d GISTID [GISTID ...], --delete GISTID [GISTID ...]
+                        remove gist(s)
+   -l, --list            list public/private gists for authenticated user
+   -lo USERNAME, --list-other USERNAME
+                        list public gists for unauthenticated users
+   -bk, --backup         create a backup of all gists
+   -sk SECRETKEY, --secret-key SECRETKEY
+                        user's github secret key
+   -nl, --no-logging     don't log anything to stdout
+   -v, --version         show utility's semantic version
+
+   sub-arguments:
+   --post/-po
+      --no-public/-np        switch gist visibility to private
+
+      --description/-desc    description for the gist
     
-    sub-arguments:
-      --post/-po
-          --no-public/-np        switch gist visibility to private
-    
-          --description/-desc    description for the gist
-        
-      --patch/-pa
-          --gist-id/-gi          gist-id for the gist
-    
-    For more usage help, check out https://www.github.com/justaus3r/ceg/#examples
+   --patch/-pa
+      --gist-id/-gi          gist-id for the gist
+
+   For more usage help, check out https://www.github.com/justaus3r/ceg/#examples
+
 
 Examples
 --------
@@ -155,7 +156,7 @@ You can download an arbitrary amount of gists in one go! just pass their ``gist-
 
 Deleting a gist
 ~~~~~~~~~~~~~~~
-You can delete a gist by simpling passing its ``gist-id``.note that bulk operation is not supported for now.
+You can delete a gist by simpling passing its ``gist-id``.
 ::
 
     $ ceg -d gistid
@@ -205,7 +206,7 @@ License
 This project is distributed under "GNU General Public License v3.0",and can be distributed with its later versions.
 
 .. _`Api documentation`: https://justaus3r.github.io/ceg/ceg.html
-.. _PYPI: https://pypi.org
+.. _PYPI: https://pypi.org/project/ceg/
 .. _poetry: https://python-poetry.org/docs/master/#installing-with-the-official-installer
 .. _`not recommended`: https://python-poetry.org/docs/#alternative-installation-methods-not-recommended
 .. _`GitHub bug tracker`: https://github.com/justaus3r/ceg/issues/
