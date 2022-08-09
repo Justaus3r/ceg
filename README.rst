@@ -78,7 +78,7 @@ You can also install it manually. for that, you need to have poetry_ installed a
     poetry install
     poetry build
 
-After installation, you can optionally set an environment variable named ``GIHTUB_SECRET_KEY`` and save your GitHub secret there. this helps to preclude you from passing your key explicitly every time you use the utility. however, if you don't feel comfortable storing it in an environment variable, you can use ``-sk/--secret-key`` and pass it to the utility.
+After installation, you can optionally set an environment variable named ``GITHUB_SECRET_KEY`` and save your GitHub secret there. this helps to preclude you from passing your key explicitly every time you use the utility. however, if you don't feel comfortable storing it in an environment variable, you can use ``-sk/--secret-key`` and pass it to the utility.
 
 
 Usage
