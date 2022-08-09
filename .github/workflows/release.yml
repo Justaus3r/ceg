@@ -69,4 +69,6 @@ jobs:
             poetry install
             mypy $GITHUB_WORKSPACE/ceg --install-types --non-interactive
             poetry publish --build
+            if [[ $? -ne 0 ]];then
+                twine upload dist/* -u __token__ -p $POETRY_PYPI_TOKEN_PYPI
         shell: 'bash'
