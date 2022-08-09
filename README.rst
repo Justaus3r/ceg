@@ -2,7 +2,7 @@
 Ceg
 ===
 
-|made-with-python-badge|  |github-license-badge|  |github-release-badge|  |pr-welcomed-badge|
+|made-with-python-badge|  |github-license-badge|  |github-release-badge|  |pr-welcomed-badge|  |codacy-grade-badge|
 
 
 .. |made-with-python-badge| image:: https://img.shields.io/badge/Made%20with-Python-1f425f.svg
@@ -16,6 +16,11 @@ Ceg
 
 .. |pr-welcomed-badge| image:: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
    :target: https://makeapullrequest.com
+
+
+.. |codacy-grade-badge| image:: https://app.codacy.com/project/badge/Grade/25f4e16fd7b74d9ca6309d6b2d31362c
+   :target: https://www.codacy.com/gh/Justaus3r/ceg/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Justaus3r/ceg&amp;utm_campaign=Badge_Grade
+
 
 Overview
 ========
@@ -63,7 +68,7 @@ There are multiple ways to install ceg, the simplest one being installing from P
     python3 -m pip install -U ceg
 
 
-You can also install it manually. for that, you need to have poetry_ installed and be on a system with a minimal python version being ``3.7``.after installing poetry, you can just do ``poetry build`` and pip install from ``dist/ceg*.whl`` or whatever you prefer. however please be mindful that installing poetry from pip is `not recommended`_. 
+You can also install it manually. for that, you need to have poetry_ installed and be on a system with a minimal python version being ``3.7`` (one thing to keep in mind is that i am using python 3.10 so you will need to change python version in pyproject.yaml to your version and build it with that).after installing poetry, you can just do ``poetry build`` and pip install from ``dist/ceg*.whl`` or whatever you prefer. however please be mindful that installing poetry from pip is `not recommended`_. 
 ::
 
     # you can also use install/uninstall scripts after cloning the repo, if on *nix.
