@@ -81,7 +81,7 @@ Api Reference
 """
 
 from .ceg import Ceg
-from typing import List , Dict, Optional
+from typing import List, Dict, Optional
 
 
 class CegApi:
@@ -164,17 +164,17 @@ class CegApi:
         self.ceg_instance.patch()
         return self.ceg_instance.response_status_str
 
-    def delete(self, gist_id: str) -> str:
+    def delete(self, *args) -> str:
         """Delete an existing gist.
 
         Args:
-        gist_id = gist_id for the gist,that is to be deleted.
+        gist_id = arbitrary amount of gist-ids.
 
         Returns:
             Returns HTTP call response status in string format.
         """
         self.ceg_instance.http_operation = "delete"
-        self.ceg_instance.arg_val = gist_id
+        self.ceg_instance.arg_val = args
         self.ceg_instance.delete()
         return self.ceg_instance.response_status_str
 

@@ -475,10 +475,12 @@ class Ceg:
 
     def delete(self) -> None:
         """Delete an existing gist."""
-        self.logger.info("Searching and deleting gist...")
-        self.end_point += "/" + self.arg_val  # type: ignore
-        self.__send_http_request()
-        self.logger.info("Gist deleted sucessfully!.")
+        endpoint_copy: str = self.end_point
+        for gist in self.arg_val:  # type: ignore
+            self.logger.info(f"Searching and deleting gist with id '{gist[:4]}...'")
+            self.end_point = "{}/{}".format(endpoint_copy, gist)  # type: ignore
+            self.__send_http_request()
+            self.logger.info("Gist deleted sucessfully!.")
 
     def backup(self) -> None:
         """Create a local backup of all the gists."""
@@ -506,7 +508,8 @@ class Ceg:
             (Optionally) returns a list containing all gists.
         """
         user_gist_info: Optional[List[Dict[str, str]]] = self.list(
-            end_point=f"https://api.github.com/users/{self.arg_val}/gists", no_header=True 
+            end_point=f"https://api.github.com/users/{self.arg_val}/gists",
+            no_header=True,
         )
         if not self.to_stdout:
             return user_gist_info

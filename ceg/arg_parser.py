@@ -56,7 +56,7 @@ class ArgumentParser(argparse.ArgumentParser):
             Returns the argparse.Namespace object containing all the arguments.
 
         """
-        # TODO: for [v0.2.0]: switch for returning enhanced return codes for better script compatibility.
+        # TODO: for [v0.2.0 | v0.3.0]: switch for returning enhanced return codes for better script compatibility.
         # TODO: for [v0.2.0 | v0.3.0]: Use pickle to use serialized cache from local storage(Security implications?).
         # TODO: for [v0.2.0 | v0.3.0]: Change arg parser to flask/click or python-poetry/cleo
         group = self.add_mutually_exclusive_group()
@@ -94,7 +94,12 @@ class ArgumentParser(argparse.ArgumentParser):
             nargs="+",
         )
         group.add_argument(
-            "-d", "--delete", help="remove a gist", metavar="GISTID", type=str
+            "-d",
+            "--delete",
+            help="remove gist(s)",
+            metavar="GISTID",
+            type=str,
+            nargs="+",
         )
         group.add_argument(
             "-l",
