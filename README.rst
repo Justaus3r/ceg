@@ -26,6 +26,9 @@ Overview
 ========
 -   `Introduction`_
 -   `Installation`_
+        - `From PYPI using pip`_
+        - `From PYPI using pipx`_
+        - `Manually`_
 -   `Usage`_
 -   `Examples`_
         - `Creating a gist`_
@@ -58,7 +61,9 @@ ceg can also be used as a library. check out `Api documentation`_.
 
 Installation
 ------------
-There are multiple ways to install ceg, the simplest one being installing from PYPI_:
+From PYPI using pip
+~~~~~~~~~~~~~~~~~~~
+The simplest way to install ceg with battery included is by using pip:
 ::
 
     # py instead of python3 on windows
@@ -67,8 +72,16 @@ There are multiple ways to install ceg, the simplest one being installing from P
     # and all patches are pushed to new releases.
     python3 -m pip install -U ceg
 
+From PYPI using pipx
+~~~~~~~~~~~~~~~~~~~~
+You can also use pipx if you plan to only use ceg as a command line tool.pipx ensures dependency isolation and is made specifically for cli tools.
+::
 
-You can also install it manually. for that, you need to have poetry_ installed and be on a system with a minimal python version being ``3.7`` (one thing to keep in mind is that i am using python 3.10 so you will need to change python version in pyproject.yaml to your version and build it with that).after installing poetry, you can just do ``poetry build`` and pip install from ``dist/ceg*.whl`` or whatever you prefer. however please be mindful that installing poetry from pip is `not recommended`_. 
+    python3 -m pipx install --system-site-packages ceg
+
+Manually
+~~~~~~~~
+You can also install ceg manually. for that, you need to have poetry_ installed and be on a system with a minimal python version being ``3.7`` (one thing to keep in mind is that i am using python 3.10 so you will need to change python version in pyproject.yaml to your version and build it with that).after installing poetry, you can just do ``poetry build`` and pip install from ``dist/ceg*.whl`` or whatever you prefer. however please be mindful that installing poetry from pip is `not recommended`_. 
 ::
 
     # you can also use install/uninstall scripts after cloning the repo, if on *nix.
