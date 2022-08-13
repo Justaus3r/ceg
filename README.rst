@@ -169,10 +169,10 @@ You can download an arbitrary amount of gists in one go! just pass their ``gist-
 
 Deleting a gist
 ~~~~~~~~~~~~~~~
-You can delete a gist by simpling passing its ``gist-id``.
+You can delete multiple gists by simpling passing their ``gist-id``.
 ::
 
-    $ ceg -d gistid
+    $ ceg -d gistid1 gistid2
 
 Backing up all gists
 ~~~~~~~~~~~~~~~~~~~~
