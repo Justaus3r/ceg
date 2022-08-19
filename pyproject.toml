@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ceg"
-version = "0.2.0"
+version = "0.3.0"
 description = "A simple gist crud utility."
 license = "GPL-3.0-or-later"
 authors = ["Justaus3r <x-neron@pm.me>"]

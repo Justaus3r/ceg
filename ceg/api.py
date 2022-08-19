@@ -36,9 +36,7 @@ cgi = CegApi(secret_key="abcd")
 ```
 For creating a gist:
 ```
-response_str = cgi.post("file1.py", "file2.py", "dirty_secrets.verysecurefile", is_private=False, gist_description="bla")
-# or simply
-cgi.post(...)
+gist_url = cgi.post("file1.py", "file2.py", "dirty_secrets.verysecurefile", is_private=False, gist_description="bla")
 # note that if a file provided as argument does not exist,ceg will automatically create it and open
 # it in your default file editor.
 ```   
@@ -126,7 +124,12 @@ class CegApi:
         self.ceg_instance.get()
         return self.ceg_instance.response_status_str
 
-    def post(self, *args: str, is_private: bool = False, gist_description: str) -> str:
+    def post(
+        self,
+        *args: str,
+        is_private: bool = False,
+        gist_description: Optional[str] = None
+    ) -> str:
         """Create arbitrary number of gists.
 
         Args:
@@ -135,14 +138,16 @@ class CegApi:
             gist_description: Description for the gist.
 
         Returns:
-            Returns HTTP call response status in string format.
+            Returns HTML url for newly created gist.
         """
         self.ceg_instance.http_operation = "post"
         self.ceg_instance.arg_val = args
         self.ceg_instance.gist_no_public = is_private
         self.ceg_instance.gist_description = gist_description
-        self.ceg_instance.post()
-        return self.ceg_instance.response_status_str
+        # type casting because of distinct variable types(i.e Optional[str] and str)
+        # and so so mypy will complain if not type casted
+        gist_html_url: str = str(self.ceg_instance.post())
+        return gist_html_url
 
     def patch(
         self, *args: str, gist_id: str, gist_description: Optional[str] = None

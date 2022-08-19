@@ -59,7 +59,7 @@ For more usage help, check out https://www.github.com/justaus3r/ceg/#examples"""
     DESCRIPTION: str = "A simple gist crud utility."
     # Caution(message to myself): Be careful when updating the version because
     # wrong updates can be a mess.
-    VERSION: str = "0.2.0"
+    VERSION: str = "0.3.0"
 
 
 def exception_executioner(exception_obj) -> None:

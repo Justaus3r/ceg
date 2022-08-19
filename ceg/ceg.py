@@ -225,10 +225,13 @@ class Ceg:
         return_var: Union[
             int, List[Dict[str, Union[str, Dict[str, str], bool, int, None]]]
         ]
-        if self.http_operation == "get":
-            response_str: str = response.content.decode("utf-8")
-            return_var = json.loads(response_str)
-        elif self.http_operation in ["post", "patch", "delete"]:
+        if self.http_operation in ["get", "post"]:
+            response_hashtable = json.loads(response.content.decode("utf-8"))
+            if self.http_operation == "get":
+                return_var = response_hashtable
+            else:
+                return_var = response_hashtable.get("html_url")
+        elif self.http_operation in ["patch", "delete"]:
             return_var = response.status_code
 
         return return_var
@@ -402,13 +405,16 @@ class Ceg:
                 )
         self.logger.info("Sucessfully downloaded the gist!", send_log=do_logging)
 
-    def post(self, **kwargs) -> None:
+    def post(self, **kwargs) -> Optional[str]:
         """Create gists.
 
         Creates arbitrary number of gists depending on files given on cli.
 
         Args:
             **kwargs: Auxiliary arbitrary keyword arguments.
+
+        Returns:
+            (Optionally) return html url of the newly created gist
         """
         is_patch: Optional[bool]
         new_filenames: Optional[Dict[str, str]]
@@ -454,8 +460,14 @@ class Ceg:
             self.payload.update({"public": not self.gist_no_public})
         if self.gist_description:
             self.payload.update({"description": self.gist_description})
-        self.__send_http_request(params=json.dumps(self.payload))
+        gist_html_url = self.__send_http_request(params=json.dumps(self.payload))
         self.logger.info(f"Sucessfully {op_success_msg[self.http_operation]} the gist!")
+        if self.http_operation == "post":
+            if self.to_stdout:
+                self.logger.info(f"Gist Url: {gist_html_url}")
+            else:
+                return gist_html_url  # type: ignore
+        return None
 
     def patch(self) -> None:
         """Modify an existing gist."""

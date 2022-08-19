@@ -99,9 +99,7 @@ github secret key, which can be obtained from developers <strong><code>github</c
 
 <p>For creating a gist:</p>
 
-<pre><code>response_str = cgi.post("file1.py", "file2.py", "dirty_secrets.verysecurefile", is_private=False, gist_description="bla")
-# or simply
-cgi.post(...)
+<pre><code>gist_html_url = cgi.post("file1.py", "file2.py", "dirty_secrets.verysecurefile", is_private=True, gist_description="bla")
 # note that if a file provided as argument does not exist,ceg will automatically create it and open
 # it in your default file editor.
 </code></pre>
