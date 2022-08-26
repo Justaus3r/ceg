@@ -45,7 +45,7 @@ Overview
 
 Introduction
 ------------
-A gist **<c**>reate/**<r**>ead/**<u**>pdate/**<d**>elete (crud) utility(pronounced as *Keg*). *sounds boring?*  let me try again: it's a `snippet`_ (being called a gist in github's terminology) .it can perform all the operations,you would want to perform on a gist.this includes:
+A gist **<c**>reate/**<r**>ead/**<u**>pdate/**<d**>elete (crud) utility(pronounced as *Keg*). *sounds boring?*  let me try again: it's a command-line `snippet`_ (being called a gist in github's terminology) manager .it can perform all the operations,you would want to perform on a gist.this includes:
 
 1. Creating gist(s).
 2. Modifying existing gist(s).
