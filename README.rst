@@ -45,7 +45,7 @@ Overview
 
 Introduction
 ------------
-A gist **<c**>reate/**<r**>ead/**<u**>pdate/**<d**>elete (crud) utility(pronounced as *Keg*).it can perform all the operations,you would want to perform on a gist.this includes:
+A gist **<c**>reate/**<r**>ead/**<u**>pdate/**<d**>elete (crud) utility(pronounced as *Keg*). *sounds boring?*  let me try again: it's a `snippet`_ (being called a gist in github's terminology) .it can perform all the operations,you would want to perform on a gist.this includes:
 
 1. Creating gist(s).
 2. Modifying existing gist(s).
@@ -230,3 +230,4 @@ This project is distributed under "GNU General Public License v3.0",and can be d
 .. _`jswank/gister`: https://github.com/jswank/gister
 .. _`hackjutsu/Lepton`: https://github.com/hackjutsu/Lepton
 .. _`pipx`: https://github.com/pypa/pipx/
+.. _`snippet`: https://en.wikipedia.org/wiki/Snippet_(programming)
