@@ -427,9 +427,9 @@ class Ceg:
         files_to_ignore: List[str] = []
         file_to_content_map: Dict[str, Dict[str, str]] = {}
         for file in self.arg_val:  # type: ignore
-            if file not in [file for file in os.listdir() if os.path.isfile(file)]:
+            if not os.path.exists(file):
                 self.logger.info(
-                    f"{file} not found in current directory,opening in default editor.."
+                    f"{file} not found in given path,opening in default editor.."
                 )
                 ret_code: int = open_file(file)
                 if ret_code != 0:
@@ -445,7 +445,8 @@ class Ceg:
                 continue
             with open(file, "r") as r_obj:
                 file_content: str = r_obj.read()
-            file_to_content_map.update({file: {"content": file_content}})
+            file_basename: str = os.path.basename(file)
+            file_to_content_map.update({file_basename: {"content": file_content}})
             if is_patch and new_filenames.get(file):  # type: ignore
                 file_to_content_map[file].update(
                     {"filename": new_filenames.get(file)}  # type: ignore
@@ -502,7 +503,6 @@ class Ceg:
         try:
             self.get()
         except requests.exceptions.ConnectionError:
-            os.chdir("../")
             dir_handler.return_code = 1
             raise requests.exceptions.ConnectionError(
                 "Connection Error!,please check your internet connection."
@@ -555,6 +555,7 @@ class Ceg:
         except (
             CegExceptions.BadCredentials,
             CegExceptions.ResourceNotFound,
+            CegExceptions.UnprocessableRequest,
             CegExceptions.InsufficientSubArguments,
             requests.exceptions.ConnectionError,
         ):

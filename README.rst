@@ -151,6 +151,8 @@ you can also update the gist description by passing ``--description/-desc NEWDES
     
     $ ceg --patch "file4" "file4" -desc "My dirty secrets." -gi abcdef
 
+*From v0.4.0 your files doesn't have to be in running directory of ceg, i.e: you can use files from other directories by giving their path.*
+
 Listing public/secret(private) gists
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 You can list all of your gists, which will be beautified before printing to stdout. please note that if you are not authenticated(not giving GitHub secret key) then you can use ``--list-other/-lo`` but you will only be shown public gists.
