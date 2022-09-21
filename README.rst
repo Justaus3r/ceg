@@ -152,7 +152,7 @@ you can also update the gist description by passing ``--description/-desc NEWDES
     # use '->' for renaming files
     $ ceg --patch "file1->file1_renamed" "file2" -desc "My dirty secrets." -gi abcdef
 
-*From v0.4.0 your files doesn't have to be in running directory of ceg, i.e: you can use files from other directories by giving their path.*
+*From v0.4.0 ownwards your files doesn't have to be in running directory of ceg, i.e: you can use files from other directories by giving their path.*
 
 Listing public/secret(private) gists
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
