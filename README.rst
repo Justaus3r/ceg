@@ -149,8 +149,8 @@ Modifying an existing gist
 Modifying a gist is just as easier as creating a gist. just pass all the modified files to ceg and the ``gist-id`` of gist you are modifying(use ``--gist-id/gi``).
 you can also update the gist description by passing ``--description/-desc NEWDESCRIPTION``.
 ::
-    
-    $ ceg --patch "file4" "file4" -desc "My dirty secrets." -gi abcdef
+    # use '->' for renaming files
+    $ ceg --patch "file4->file4_renamed" "file4" -desc "My dirty secrets." -gi abcdef
 
 *From v0.4.0 your files doesn't have to be in running directory of ceg, i.e: you can use files from other directories by giving their path.*
 
