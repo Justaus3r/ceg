@@ -437,7 +437,8 @@ class Ceg:
                         f"An Error occured while opening '{file}' in default editor."
                     )
             self.logger.info(f"Validating filename for '{file}'")
-            validated: bool = gist_filename_validated(file)
+            file_basename: str = os.path.basename(file)
+            validated: bool = gist_filename_validated(file_basename)
             if not validated:
                 all_files_validate = False
                 self.logger.warning(f"{file} will be ignored!")
@@ -445,11 +446,10 @@ class Ceg:
                 continue
             with open(file, "r") as r_obj:
                 file_content: str = r_obj.read()
-            file_basename: str = os.path.basename(file)
             file_to_content_map.update({file_basename: {"content": file_content}})
-            if is_patch and new_filenames.get(file):  # type: ignore
-                file_to_content_map[file].update(
-                    {"filename": new_filenames.get(file)}  # type: ignore
+            if is_patch and new_filenames.get(file_basename):  # type: ignore
+                file_to_content_map[file_basename].update(
+                    {"filename": new_filenames.get(file_basename)}  # type: ignore
                 )
 
         if not all_files_validate:
@@ -479,8 +479,9 @@ class Ceg:
 
         for file_index, file in enumerate(self.arg_val):  # type: ignore
             try:
-                oldname, newname = file.split("/")
-                new_filename_map.update({oldname: newname})
+                oldname, newname = file.split("->")
+                oldname_base: str = os.path.basename(oldname)
+                new_filename_map.update({oldname_base: newname})
                 self.arg_val[file_index] = oldname  # type: ignore
             except ValueError:
                 pass

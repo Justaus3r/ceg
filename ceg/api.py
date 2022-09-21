@@ -163,7 +163,7 @@ class CegApi:
             Returns HTTP call response status in string format.
         """
         self.ceg_instance.http_operation = "patch"
-        self.ceg_instance.arg_val = args
+        self.ceg_instance.arg_val = list(args)
         self.ceg_instance.gist_description = gist_description
         self.ceg_instance.gist_id = gist_id
         self.ceg_instance.patch()
