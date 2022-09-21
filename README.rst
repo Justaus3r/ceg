@@ -74,10 +74,11 @@ The simplest way to install ceg with battery included is by using pip:
 
 From PYPI using pipx
 ~~~~~~~~~~~~~~~~~~~~
-You can also use `pipx`_ if you plan to only use ceg as a command line tool.pipx ensures dependency isolation and is made specifically for cli tools.
+You can also use `pipx`_ if you plan to only use ceg as a command line tool.pipx ensures dependency isolation and is made specifically for cli tools. but please be aware that you will not be able to use ceg as a library if installed from pipx since its installed in a virtenv.
 ::
 
     python3 -m pipx install --system-site-packages ceg
+
 
 Manually
 ~~~~~~~~
