@@ -59,3 +59,12 @@ Please only refer to submodule named `api` as other files contain reference to m
 may contain ambiguous documentation which may or maynot be clear unless codebase is understood.
 
 """
+
+from .misc import UtilInfo
+from .api import CegApi
+
+
+__author__ = "Justaus3r"
+__email__ = "x-neron@pm.me"
+__version__ = UtilInfo.VERSION
+__description__ = "An all in one github's gist manager"
