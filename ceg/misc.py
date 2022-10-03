@@ -56,7 +56,7 @@ sub-arguments:
       --gist-id/-gi          gist-id for the gist
 
 For more usage help, check out https://www.github.com/justaus3r/ceg/#examples"""
-    DESCRIPTION: str = "A simple gist crud utility."
+    DESCRIPTION: str = "An all in one github's gist manager."
     # Caution(message to myself): Be careful when updating the version because
     # wrong updates can be a mess.
     VERSION: str = "0.4.1"
