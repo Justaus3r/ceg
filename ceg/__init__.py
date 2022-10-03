@@ -67,4 +67,4 @@ from .api import CegApi
 __author__ = "Justaus3r"
 __email__ = "x-neron@pm.me"
 __version__ = UtilInfo.VERSION
-__description__ = "An all in one github's gist manager"
+__description__ = UtilInfo.DESCRIPTION
