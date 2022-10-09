@@ -88,7 +88,7 @@ class ArgumentParser(argparse.ArgumentParser):
         group.add_argument(
             "-g",
             "--get",
-            help="Download gist(s)",
+            help="download gist(s)",
             metavar="GISTID",
             type=str,
             nargs="+",
