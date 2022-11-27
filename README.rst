@@ -170,6 +170,8 @@ You can download an arbitrary amount of gists in one go! just pass their ``gist-
     
     $ ceg -g gistid1 gistid2 gistid3
 
+**Note**: Only works for authenticated users, for now, and is planned to change for the next releases.
+
 Deleting a gist
 ~~~~~~~~~~~~~~~
 You can delete multiple gists by simpling passing their ``gist-id``.
