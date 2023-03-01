@@ -94,6 +94,7 @@ github secret key, which can be obtained from developers <strong><code>github</c
 <p>Object instantiation:</p>
 
 <pre><code>cgi = CegApi(secret_key="abcd")
+# note that for using an instance for unauthenticated user, set secret_key to `None`
 </code></pre>
 
 <p>For creating a gist:</p>
@@ -122,12 +123,16 @@ github secret key, which can be obtained from developers <strong><code>github</c
 <p>For downloading a gist:</p>
 
 <pre><code>response_str = cgi.get("gistid1", "gistid2")
+# or for unauthenticated users
+response_str = ceg.get("gistid1", "gistid2", username="myusername")
 # note that gist-ids are typically hashes like 'aa5a315d61ae9438b18d'
 </code></pre>
 
 <p>For creating a backup:</p>
 
 <pre><code>response_str = cgi.backup()
+# or for unauthenticated users
+response_str = cgi.backup(username="myusername")
 </code></pre>
 
 <p>For deleting a gist:</p>
@@ -178,188 +183,195 @@ github secret key, which can be obtained from developers <strong><code>github</c
 </span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="sd">Object instantiation:</span>
 </span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a><span class="sd">```</span>
 </span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a><span class="sd">cgi = CegApi(secret_key=&quot;abcd&quot;)</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a><span class="sd">```</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a><span class="sd">For creating a gist:</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a><span class="sd">```</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a><span class="sd">gist_url = cgi.post(&quot;file1.py&quot;, &quot;file2.py&quot;, &quot;dirty_secrets.verysecurefile&quot;, is_private=False, gist_description=&quot;bla&quot;)</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a><span class="sd"># note that if a file provided as argument does not exist,ceg will automatically create it and open</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a><span class="sd"># it in your default file editor.</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="sd">```   </span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>
-</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a><span class="sd">For modifying an existing gist:</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a><span class="sd">```</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a><span class="sd">response_str = cgi.patch(&quot;file2.py&quot;, gist_id=&quot;abc&quot;)</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a><span class="sd"># you can optionally also modify the gist description using &#39;gist_description=&quot;whatever&quot;&#39;</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="sd">```</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>
-</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a><span class="sd">For listing gists for authenticated user:</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a><span class="sd">```</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a><span class="sd">user_gist_list = cgi.list()</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="sd">```</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>
-</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="sd">For list gist for unauthenticated user:</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a><span class="sd">```</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="sd">user_gist_list = cgi.list_other(&quot;username&quot;)</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">```</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>
-</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a><span class="sd">For downloading a gist:</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="sd">```</span>
-</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a><span class="sd">response_str = cgi.get(&quot;gistid1&quot;, &quot;gistid2&quot;)</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="sd"># note that gist-ids are typically hashes like &#39;aa5a315d61ae9438b18d&#39;</span>
-</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a><span class="sd">```</span>
-</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a>
-</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a><span class="sd">For creating a backup:</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a><span class="sd"># note that for using an instance for unauthenticated user, set secret_key to `None`</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a><span class="sd">```</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a><span class="sd">For creating a gist:</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a><span class="sd">```</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a><span class="sd">gist_url = cgi.post(&quot;file1.py&quot;, &quot;file2.py&quot;, &quot;dirty_secrets.verysecurefile&quot;, is_private=False, gist_description=&quot;bla&quot;)</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a><span class="sd"># note that if a file provided as argument does not exist,ceg will automatically create it and open</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="sd"># it in your default file editor.</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a><span class="sd">```   </span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a><span class="sd">For modifying an existing gist:</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a><span class="sd">```</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a><span class="sd">response_str = cgi.patch(&quot;file2.py&quot;, gist_id=&quot;abc&quot;)</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="sd"># you can optionally also modify the gist description using &#39;gist_description=&quot;whatever&quot;&#39;</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a><span class="sd">```</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a><span class="sd">For listing gists for authenticated user:</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a><span class="sd">```</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="sd">user_gist_list = cgi.list()</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a><span class="sd">```</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a><span class="sd">For list gist for unauthenticated user:</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="sd">```</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">user_gist_list = cgi.list_other(&quot;username&quot;)</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a><span class="sd">```</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="sd">For downloading a gist:</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a><span class="sd">```</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="sd">response_str = cgi.get(&quot;gistid1&quot;, &quot;gistid2&quot;)</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a><span class="sd"># or for unauthenticated users</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="sd">response_str = ceg.get(&quot;gistid1&quot;, &quot;gistid2&quot;, username=&quot;myusername&quot;)</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a><span class="sd"># note that gist-ids are typically hashes like &#39;aa5a315d61ae9438b18d&#39;</span>
 </span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="sd">```</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a><span class="sd">response_str = cgi.backup()</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="sd">```</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>
-</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="sd">For deleting a gist:</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd">```</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">cgi.delete(&quot;gistid&quot;)</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a><span class="sd"># doesn&#39;t support batch operation for now </span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="sd">```</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>
-</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="sd">Api Reference</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">-------------</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>
-</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="kn">from</span> <span class="nn">.ceg</span> <span class="kn">import</span> <span class="n">Ceg</span>
-</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>
-</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>
-</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="k">class</span> <span class="nc">CegApi</span><span class="p">:</span>
-</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>    <span class="sd">&quot;&quot;&quot;Main interface for api.</span>
-</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>
-</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">    Provides the main interface open for api.contains all</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">    the methods needed to perform all basic operations on gists.</span>
-</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>
-</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd">    Attributes:</span>
-</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">        ceg_instance: its an instance of Ceg class.which contains the main</span>
-</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a><span class="sd">                      implementation of ceg utility.</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="sd">For creating a backup:</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">```</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="sd">response_str = cgi.backup()</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd"># or for unauthenticated users</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">response_str = cgi.backup(username=&quot;myusername&quot;)</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a><span class="sd">```</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">For deleting a gist:</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="sd">```</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">cgi.delete(&quot;gistid&quot;)</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd"># doesn&#39;t support batch operation for now </span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">```</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a><span class="sd">Api Reference</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a><span class="sd">-------------</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="kn">from</span> <span class="nn">.ceg</span> <span class="kn">import</span> <span class="n">Ceg</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="k">class</span> <span class="nc">CegApi</span><span class="p">:</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>    <span class="sd">&quot;&quot;&quot;Main interface for api.</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a><span class="sd">    Provides the main interface open for api.contains all</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">    the methods needed to perform all basic operations on gists.</span>
 </span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
-</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>        <span class="sd">&quot;&quot;&quot;Inits CegApi with github secret key&quot;&quot;&quot;</span>
-</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="p">:</span> <span class="n">Ceg</span> <span class="o">=</span> <span class="n">Ceg</span><span class="p">(</span>
-</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>            <span class="n">operation</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>            <span class="n">arg_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>            <span class="n">is_recursive_operation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>            <span class="n">is_other_user</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>            <span class="n">secret_key</span><span class="o">=</span><span class="n">secret_key</span><span class="p">,</span>
-</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>            <span class="n">do_logging</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>            <span class="n">gist_no_public</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>            <span class="n">gist_desc</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>            <span class="n">gist_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>        <span class="p">)</span>
-</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>
-</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>        <span class="sd">&quot;&quot;&quot;Downloads a gist.</span>
-</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>
-</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a><span class="sd">        Receives arbitrary amount gist-ids and downloads them.</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="sd">    Attributes:</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="sd">        ceg_instance: its an instance of Ceg class.which contains the main</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">                      implementation of ceg utility.</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>        <span class="sd">&quot;&quot;&quot;Inits CegApi with github secret key&quot;&quot;&quot;</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="p">:</span> <span class="n">Ceg</span> <span class="o">=</span> <span class="n">Ceg</span><span class="p">(</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>            <span class="n">operation</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>            <span class="n">arg_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>            <span class="n">is_recursive_operation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>            <span class="n">is_other_user</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>            <span class="n">secret_key</span><span class="o">=</span><span class="n">secret_key</span><span class="p">,</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>            <span class="n">do_logging</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>            <span class="n">gist_no_public</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>            <span class="n">gist_desc</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>            <span class="n">gist_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>        <span class="p">)</span>
 </span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>
-</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="sd">        Args:</span>
-</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a><span class="sd">            *args: Variable lenght argument list containing gist-ids.</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>        <span class="sd">&quot;&quot;&quot;Downloads a gist.</span>
 </span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>
-</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a>
-</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">        Returns:</span>
-</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
-</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
-</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
-</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
-</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>
-</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span>
-</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a>        <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>        <span class="n">gist_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>        <span class="sd">&quot;&quot;&quot;Create arbitrary number of gists.</span>
-</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a>
-</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a><span class="sd">        Args:</span>
-</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="sd">            *args: variable lenght arguments list containing gist-ids.</span>
-</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a><span class="sd">            is_private: indicates whether to make gist private.</span>
-</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a><span class="sd">            gist_description: Description for the gist.</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="sd">        Receives arbitrary amount gist-ids and downloads them.</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">        Args:</span>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a><span class="sd">            *args: Variable lenght argument list containing gist-ids.</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">        Returns:</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">((</span><span class="s2">&quot;user:&quot;</span> <span class="o">+</span> <span class="n">username</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="n">args</span><span class="p">)</span> <span class="k">if</span> <span class="n">username</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a>        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>        <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a>        <span class="n">gist_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a>        <span class="sd">&quot;&quot;&quot;Create arbitrary number of gists.</span>
 </span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a>
-</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a><span class="sd">        Returns:</span>
-</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="sd">            Returns HTML url for newly created gist.</span>
-</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;post&quot;</span>
-</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
-</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_no_public</span> <span class="o">=</span> <span class="n">is_private</span>
-</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_description</span> <span class="o">=</span> <span class="n">gist_description</span>
-</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a>        <span class="c1"># type casting because of distinct variable types(i.e Optional[str] and str)</span>
-</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a>        <span class="c1"># and so so mypy will complain if not type casted</span>
-</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a>        <span class="n">gist_html_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">post</span><span class="p">())</span>
-</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a>        <span class="k">return</span> <span class="n">gist_html_url</span>
-</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a>
-</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a>    <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span>
-</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gist_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gist_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a>        <span class="sd">&quot;&quot;&quot;Modify arbitrary number of existing gists.</span>
+</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a><span class="sd">        Args:</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="sd">            *args: variable lenght arguments list containing gist-ids.</span>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="sd">            is_private: indicates whether to make gist private.</span>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a><span class="sd">            gist_description: Description for the gist.</span>
+</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a><span class="sd">        Returns:</span>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a><span class="sd">            Returns HTML url for newly created gist.</span>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;post&quot;</span>
+</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
+</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_no_public</span> <span class="o">=</span> <span class="n">is_private</span>
+</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_description</span> <span class="o">=</span> <span class="n">gist_description</span>
+</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a>        <span class="c1"># type casting because of distinct variable types(i.e Optional[str] and str)</span>
+</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a>        <span class="c1"># and so so mypy will complain if not type casted</span>
+</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a>        <span class="n">gist_html_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">post</span><span class="p">())</span>
+</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a>        <span class="k">return</span> <span class="n">gist_html_url</span>
 </span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a>
-</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a><span class="sd">        Args:</span>
-</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a><span class="sd">             *args: variable lenght arguments list containing gist-names.</span>
-</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a><span class="sd">             gist_id: gist-id for the gist,that is to be modified.</span>
-</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a><span class="sd">             gist_description: (Optional) Description for the gist.</span>
+</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a>    <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span>
+</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gist_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gist_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a>        <span class="sd">&quot;&quot;&quot;Modify arbitrary number of existing gists.</span>
 </span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a>
-</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a><span class="sd">        Returns:</span>
-</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
-</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;patch&quot;</span>
-</span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-</span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_description</span> <span class="o">=</span> <span class="n">gist_description</span>
-</span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_id</span> <span class="o">=</span> <span class="n">gist_id</span>
-</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">patch</span><span class="p">()</span>
-</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
-</span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a>
-</span><span id="L-172"><a href="#L-172"><span class="linenos">172</span></a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-173"><a href="#L-173"><span class="linenos">173</span></a>        <span class="sd">&quot;&quot;&quot;Delete an existing gist.</span>
-</span><span id="L-174"><a href="#L-174"><span class="linenos">174</span></a>
-</span><span id="L-175"><a href="#L-175"><span class="linenos">175</span></a><span class="sd">        Args:</span>
-</span><span id="L-176"><a href="#L-176"><span class="linenos">176</span></a><span class="sd">        gist_id = arbitrary amount of gist-ids.</span>
-</span><span id="L-177"><a href="#L-177"><span class="linenos">177</span></a>
-</span><span id="L-178"><a href="#L-178"><span class="linenos">178</span></a><span class="sd">        Returns:</span>
-</span><span id="L-179"><a href="#L-179"><span class="linenos">179</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
-</span><span id="L-180"><a href="#L-180"><span class="linenos">180</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-181"><a href="#L-181"><span class="linenos">181</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;delete&quot;</span>
-</span><span id="L-182"><a href="#L-182"><span class="linenos">182</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
-</span><span id="L-183"><a href="#L-183"><span class="linenos">183</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-</span><span id="L-184"><a href="#L-184"><span class="linenos">184</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
-</span><span id="L-185"><a href="#L-185"><span class="linenos">185</span></a>
-</span><span id="L-186"><a href="#L-186"><span class="linenos">186</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
-</span><span id="L-187"><a href="#L-187"><span class="linenos">187</span></a>        <span class="sd">&quot;&quot;&quot;Return gist data for authenticated user.</span>
-</span><span id="L-188"><a href="#L-188"><span class="linenos">188</span></a>
-</span><span id="L-189"><a href="#L-189"><span class="linenos">189</span></a><span class="sd">        Returns:</span>
-</span><span id="L-190"><a href="#L-190"><span class="linenos">190</span></a><span class="sd">            Returns a sequence containing list of all the gists of user with some info.</span>
-</span><span id="L-191"><a href="#L-191"><span class="linenos">191</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-192"><a href="#L-192"><span class="linenos">192</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
-</span><span id="L-193"><a href="#L-193"><span class="linenos">193</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
-</span><span id="L-194"><a href="#L-194"><span class="linenos">194</span></a>
-</span><span id="L-195"><a href="#L-195"><span class="linenos">195</span></a>    <span class="k">def</span> <span class="nf">list_other</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
-</span><span id="L-196"><a href="#L-196"><span class="linenos">196</span></a>        <span class="sd">&quot;&quot;&quot;Return gist data for unauthenticated user.</span>
-</span><span id="L-197"><a href="#L-197"><span class="linenos">197</span></a>
-</span><span id="L-198"><a href="#L-198"><span class="linenos">198</span></a><span class="sd">        Args:</span>
-</span><span id="L-199"><a href="#L-199"><span class="linenos">199</span></a><span class="sd">            user_name: username for the user.</span>
-</span><span id="L-200"><a href="#L-200"><span class="linenos">200</span></a>
-</span><span id="L-201"><a href="#L-201"><span class="linenos">201</span></a><span class="sd">        Returns:</span>
-</span><span id="L-202"><a href="#L-202"><span class="linenos">202</span></a><span class="sd">            Returns a sequence containing list of all the gists of user with some info.</span>
-</span><span id="L-203"><a href="#L-203"><span class="linenos">203</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-204"><a href="#L-204"><span class="linenos">204</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
-</span><span id="L-205"><a href="#L-205"><span class="linenos">205</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">user_name</span>
-</span><span id="L-206"><a href="#L-206"><span class="linenos">206</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">list_other</span><span class="p">()</span>
-</span><span id="L-207"><a href="#L-207"><span class="linenos">207</span></a>
-</span><span id="L-208"><a href="#L-208"><span class="linenos">208</span></a>    <span class="k">def</span> <span class="nf">backup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-209"><a href="#L-209"><span class="linenos">209</span></a>        <span class="sd">&quot;&quot;&quot;Create backup of all gists on local media.</span>
-</span><span id="L-210"><a href="#L-210"><span class="linenos">210</span></a>
-</span><span id="L-211"><a href="#L-211"><span class="linenos">211</span></a><span class="sd">        Returns:</span>
-</span><span id="L-212"><a href="#L-212"><span class="linenos">212</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
-</span><span id="L-213"><a href="#L-213"><span class="linenos">213</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-214"><a href="#L-214"><span class="linenos">214</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
-</span><span id="L-215"><a href="#L-215"><span class="linenos">215</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">is_recursive_op</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="L-216"><a href="#L-216"><span class="linenos">216</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">backup</span><span class="p">()</span>
-</span><span id="L-217"><a href="#L-217"><span class="linenos">217</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
+</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a><span class="sd">        Args:</span>
+</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a><span class="sd">             *args: variable lenght arguments list containing gist-names.</span>
+</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="sd">             gist_id: gist-id for the gist,that is to be modified.</span>
+</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a><span class="sd">             gist_description: (Optional) Description for the gist.</span>
+</span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a>
+</span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a><span class="sd">        Returns:</span>
+</span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
+</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;patch&quot;</span>
+</span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+</span><span id="L-172"><a href="#L-172"><span class="linenos">172</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_description</span> <span class="o">=</span> <span class="n">gist_description</span>
+</span><span id="L-173"><a href="#L-173"><span class="linenos">173</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_id</span> <span class="o">=</span> <span class="n">gist_id</span>
+</span><span id="L-174"><a href="#L-174"><span class="linenos">174</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">patch</span><span class="p">()</span>
+</span><span id="L-175"><a href="#L-175"><span class="linenos">175</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
+</span><span id="L-176"><a href="#L-176"><span class="linenos">176</span></a>
+</span><span id="L-177"><a href="#L-177"><span class="linenos">177</span></a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-178"><a href="#L-178"><span class="linenos">178</span></a>        <span class="sd">&quot;&quot;&quot;Delete an existing gist.</span>
+</span><span id="L-179"><a href="#L-179"><span class="linenos">179</span></a>
+</span><span id="L-180"><a href="#L-180"><span class="linenos">180</span></a><span class="sd">        Args:</span>
+</span><span id="L-181"><a href="#L-181"><span class="linenos">181</span></a><span class="sd">        gist_id = arbitrary amount of gist-ids.</span>
+</span><span id="L-182"><a href="#L-182"><span class="linenos">182</span></a>
+</span><span id="L-183"><a href="#L-183"><span class="linenos">183</span></a><span class="sd">        Returns:</span>
+</span><span id="L-184"><a href="#L-184"><span class="linenos">184</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
+</span><span id="L-185"><a href="#L-185"><span class="linenos">185</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-186"><a href="#L-186"><span class="linenos">186</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;delete&quot;</span>
+</span><span id="L-187"><a href="#L-187"><span class="linenos">187</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
+</span><span id="L-188"><a href="#L-188"><span class="linenos">188</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</span><span id="L-189"><a href="#L-189"><span class="linenos">189</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
+</span><span id="L-190"><a href="#L-190"><span class="linenos">190</span></a>
+</span><span id="L-191"><a href="#L-191"><span class="linenos">191</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
+</span><span id="L-192"><a href="#L-192"><span class="linenos">192</span></a>        <span class="sd">&quot;&quot;&quot;Return gist data for authenticated user.</span>
+</span><span id="L-193"><a href="#L-193"><span class="linenos">193</span></a>
+</span><span id="L-194"><a href="#L-194"><span class="linenos">194</span></a><span class="sd">        Returns:</span>
+</span><span id="L-195"><a href="#L-195"><span class="linenos">195</span></a><span class="sd">            Returns a sequence containing list of all the gists of user with some info.</span>
+</span><span id="L-196"><a href="#L-196"><span class="linenos">196</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-197"><a href="#L-197"><span class="linenos">197</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
+</span><span id="L-198"><a href="#L-198"><span class="linenos">198</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</span><span id="L-199"><a href="#L-199"><span class="linenos">199</span></a>
+</span><span id="L-200"><a href="#L-200"><span class="linenos">200</span></a>    <span class="k">def</span> <span class="nf">list_other</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
+</span><span id="L-201"><a href="#L-201"><span class="linenos">201</span></a>        <span class="sd">&quot;&quot;&quot;Return gist data for unauthenticated user.</span>
+</span><span id="L-202"><a href="#L-202"><span class="linenos">202</span></a>
+</span><span id="L-203"><a href="#L-203"><span class="linenos">203</span></a><span class="sd">        Args:</span>
+</span><span id="L-204"><a href="#L-204"><span class="linenos">204</span></a><span class="sd">            user_name: username for the user.</span>
+</span><span id="L-205"><a href="#L-205"><span class="linenos">205</span></a>
+</span><span id="L-206"><a href="#L-206"><span class="linenos">206</span></a><span class="sd">        Returns:</span>
+</span><span id="L-207"><a href="#L-207"><span class="linenos">207</span></a><span class="sd">            Returns a sequence containing list of all the gists of user with some info.</span>
+</span><span id="L-208"><a href="#L-208"><span class="linenos">208</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-209"><a href="#L-209"><span class="linenos">209</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
+</span><span id="L-210"><a href="#L-210"><span class="linenos">210</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">user_name</span>
+</span><span id="L-211"><a href="#L-211"><span class="linenos">211</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">list_other</span><span class="p">()</span>
+</span><span id="L-212"><a href="#L-212"><span class="linenos">212</span></a>
+</span><span id="L-213"><a href="#L-213"><span class="linenos">213</span></a>    <span class="k">def</span> <span class="nf">backup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-214"><a href="#L-214"><span class="linenos">214</span></a>        <span class="sd">&quot;&quot;&quot;Create backup of all gists on local media.</span>
+</span><span id="L-215"><a href="#L-215"><span class="linenos">215</span></a>
+</span><span id="L-216"><a href="#L-216"><span class="linenos">216</span></a><span class="sd">        Returns:</span>
+</span><span id="L-217"><a href="#L-217"><span class="linenos">217</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
+</span><span id="L-218"><a href="#L-218"><span class="linenos">218</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-219"><a href="#L-219"><span class="linenos">219</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
+</span><span id="L-220"><a href="#L-220"><span class="linenos">220</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">is_recursive_op</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-221"><a href="#L-221"><span class="linenos">221</span></a>        <span class="k">if</span> <span class="n">username</span><span class="p">:</span>
+</span><span id="L-222"><a href="#L-222"><span class="linenos">222</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="s2">&quot;user:&quot;</span> <span class="o">+</span> <span class="n">username</span>
+</span><span id="L-223"><a href="#L-223"><span class="linenos">223</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">backup</span><span class="p">()</span>
+</span><span id="L-224"><a href="#L-224"><span class="linenos">224</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
 </span></pre></div>
 
 
@@ -375,139 +387,141 @@ github secret key, which can be obtained from developers <strong><code>github</c
 
     </div>
     <a class="headerlink" href="#CegApi"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi-86"><a href="#CegApi-86"><span class="linenos"> 86</span></a><span class="k">class</span> <span class="nc">CegApi</span><span class="p">:</span>
-</span><span id="CegApi-87"><a href="#CegApi-87"><span class="linenos"> 87</span></a>    <span class="sd">&quot;&quot;&quot;Main interface for api.</span>
-</span><span id="CegApi-88"><a href="#CegApi-88"><span class="linenos"> 88</span></a>
-</span><span id="CegApi-89"><a href="#CegApi-89"><span class="linenos"> 89</span></a><span class="sd">    Provides the main interface open for api.contains all</span>
-</span><span id="CegApi-90"><a href="#CegApi-90"><span class="linenos"> 90</span></a><span class="sd">    the methods needed to perform all basic operations on gists.</span>
-</span><span id="CegApi-91"><a href="#CegApi-91"><span class="linenos"> 91</span></a>
-</span><span id="CegApi-92"><a href="#CegApi-92"><span class="linenos"> 92</span></a><span class="sd">    Attributes:</span>
-</span><span id="CegApi-93"><a href="#CegApi-93"><span class="linenos"> 93</span></a><span class="sd">        ceg_instance: its an instance of Ceg class.which contains the main</span>
-</span><span id="CegApi-94"><a href="#CegApi-94"><span class="linenos"> 94</span></a><span class="sd">                      implementation of ceg utility.</span>
-</span><span id="CegApi-95"><a href="#CegApi-95"><span class="linenos"> 95</span></a><span class="sd">    &quot;&quot;&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi-91"><a href="#CegApi-91"><span class="linenos"> 91</span></a><span class="k">class</span> <span class="nc">CegApi</span><span class="p">:</span>
+</span><span id="CegApi-92"><a href="#CegApi-92"><span class="linenos"> 92</span></a>    <span class="sd">&quot;&quot;&quot;Main interface for api.</span>
+</span><span id="CegApi-93"><a href="#CegApi-93"><span class="linenos"> 93</span></a>
+</span><span id="CegApi-94"><a href="#CegApi-94"><span class="linenos"> 94</span></a><span class="sd">    Provides the main interface open for api.contains all</span>
+</span><span id="CegApi-95"><a href="#CegApi-95"><span class="linenos"> 95</span></a><span class="sd">    the methods needed to perform all basic operations on gists.</span>
 </span><span id="CegApi-96"><a href="#CegApi-96"><span class="linenos"> 96</span></a>
-</span><span id="CegApi-97"><a href="#CegApi-97"><span class="linenos"> 97</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="CegApi-98"><a href="#CegApi-98"><span class="linenos"> 98</span></a>        <span class="sd">&quot;&quot;&quot;Inits CegApi with github secret key&quot;&quot;&quot;</span>
-</span><span id="CegApi-99"><a href="#CegApi-99"><span class="linenos"> 99</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="p">:</span> <span class="n">Ceg</span> <span class="o">=</span> <span class="n">Ceg</span><span class="p">(</span>
-</span><span id="CegApi-100"><a href="#CegApi-100"><span class="linenos">100</span></a>            <span class="n">operation</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="CegApi-101"><a href="#CegApi-101"><span class="linenos">101</span></a>            <span class="n">arg_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="CegApi-102"><a href="#CegApi-102"><span class="linenos">102</span></a>            <span class="n">is_recursive_operation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="CegApi-103"><a href="#CegApi-103"><span class="linenos">103</span></a>            <span class="n">is_other_user</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="CegApi-104"><a href="#CegApi-104"><span class="linenos">104</span></a>            <span class="n">secret_key</span><span class="o">=</span><span class="n">secret_key</span><span class="p">,</span>
-</span><span id="CegApi-105"><a href="#CegApi-105"><span class="linenos">105</span></a>            <span class="n">do_logging</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="CegApi-106"><a href="#CegApi-106"><span class="linenos">106</span></a>            <span class="n">gist_no_public</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="CegApi-107"><a href="#CegApi-107"><span class="linenos">107</span></a>            <span class="n">gist_desc</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="CegApi-108"><a href="#CegApi-108"><span class="linenos">108</span></a>            <span class="n">gist_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="CegApi-109"><a href="#CegApi-109"><span class="linenos">109</span></a>        <span class="p">)</span>
-</span><span id="CegApi-110"><a href="#CegApi-110"><span class="linenos">110</span></a>
-</span><span id="CegApi-111"><a href="#CegApi-111"><span class="linenos">111</span></a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="CegApi-112"><a href="#CegApi-112"><span class="linenos">112</span></a>        <span class="sd">&quot;&quot;&quot;Downloads a gist.</span>
-</span><span id="CegApi-113"><a href="#CegApi-113"><span class="linenos">113</span></a>
-</span><span id="CegApi-114"><a href="#CegApi-114"><span class="linenos">114</span></a><span class="sd">        Receives arbitrary amount gist-ids and downloads them.</span>
+</span><span id="CegApi-97"><a href="#CegApi-97"><span class="linenos"> 97</span></a><span class="sd">    Attributes:</span>
+</span><span id="CegApi-98"><a href="#CegApi-98"><span class="linenos"> 98</span></a><span class="sd">        ceg_instance: its an instance of Ceg class.which contains the main</span>
+</span><span id="CegApi-99"><a href="#CegApi-99"><span class="linenos"> 99</span></a><span class="sd">                      implementation of ceg utility.</span>
+</span><span id="CegApi-100"><a href="#CegApi-100"><span class="linenos">100</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="CegApi-101"><a href="#CegApi-101"><span class="linenos">101</span></a>
+</span><span id="CegApi-102"><a href="#CegApi-102"><span class="linenos">102</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="CegApi-103"><a href="#CegApi-103"><span class="linenos">103</span></a>        <span class="sd">&quot;&quot;&quot;Inits CegApi with github secret key&quot;&quot;&quot;</span>
+</span><span id="CegApi-104"><a href="#CegApi-104"><span class="linenos">104</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="p">:</span> <span class="n">Ceg</span> <span class="o">=</span> <span class="n">Ceg</span><span class="p">(</span>
+</span><span id="CegApi-105"><a href="#CegApi-105"><span class="linenos">105</span></a>            <span class="n">operation</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="CegApi-106"><a href="#CegApi-106"><span class="linenos">106</span></a>            <span class="n">arg_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="CegApi-107"><a href="#CegApi-107"><span class="linenos">107</span></a>            <span class="n">is_recursive_operation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="CegApi-108"><a href="#CegApi-108"><span class="linenos">108</span></a>            <span class="n">is_other_user</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="CegApi-109"><a href="#CegApi-109"><span class="linenos">109</span></a>            <span class="n">secret_key</span><span class="o">=</span><span class="n">secret_key</span><span class="p">,</span>
+</span><span id="CegApi-110"><a href="#CegApi-110"><span class="linenos">110</span></a>            <span class="n">do_logging</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="CegApi-111"><a href="#CegApi-111"><span class="linenos">111</span></a>            <span class="n">gist_no_public</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="CegApi-112"><a href="#CegApi-112"><span class="linenos">112</span></a>            <span class="n">gist_desc</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="CegApi-113"><a href="#CegApi-113"><span class="linenos">113</span></a>            <span class="n">gist_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="CegApi-114"><a href="#CegApi-114"><span class="linenos">114</span></a>        <span class="p">)</span>
 </span><span id="CegApi-115"><a href="#CegApi-115"><span class="linenos">115</span></a>
-</span><span id="CegApi-116"><a href="#CegApi-116"><span class="linenos">116</span></a><span class="sd">        Args:</span>
-</span><span id="CegApi-117"><a href="#CegApi-117"><span class="linenos">117</span></a><span class="sd">            *args: Variable lenght argument list containing gist-ids.</span>
+</span><span id="CegApi-116"><a href="#CegApi-116"><span class="linenos">116</span></a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="CegApi-117"><a href="#CegApi-117"><span class="linenos">117</span></a>        <span class="sd">&quot;&quot;&quot;Downloads a gist.</span>
 </span><span id="CegApi-118"><a href="#CegApi-118"><span class="linenos">118</span></a>
-</span><span id="CegApi-119"><a href="#CegApi-119"><span class="linenos">119</span></a>
-</span><span id="CegApi-120"><a href="#CegApi-120"><span class="linenos">120</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi-121"><a href="#CegApi-121"><span class="linenos">121</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
-</span><span id="CegApi-122"><a href="#CegApi-122"><span class="linenos">122</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi-123"><a href="#CegApi-123"><span class="linenos">123</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
-</span><span id="CegApi-124"><a href="#CegApi-124"><span class="linenos">124</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
-</span><span id="CegApi-125"><a href="#CegApi-125"><span class="linenos">125</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="CegApi-126"><a href="#CegApi-126"><span class="linenos">126</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
-</span><span id="CegApi-127"><a href="#CegApi-127"><span class="linenos">127</span></a>
-</span><span id="CegApi-128"><a href="#CegApi-128"><span class="linenos">128</span></a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span>
-</span><span id="CegApi-129"><a href="#CegApi-129"><span class="linenos">129</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="CegApi-130"><a href="#CegApi-130"><span class="linenos">130</span></a>        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="CegApi-131"><a href="#CegApi-131"><span class="linenos">131</span></a>        <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="CegApi-132"><a href="#CegApi-132"><span class="linenos">132</span></a>        <span class="n">gist_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="CegApi-133"><a href="#CegApi-133"><span class="linenos">133</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="CegApi-134"><a href="#CegApi-134"><span class="linenos">134</span></a>        <span class="sd">&quot;&quot;&quot;Create arbitrary number of gists.</span>
-</span><span id="CegApi-135"><a href="#CegApi-135"><span class="linenos">135</span></a>
-</span><span id="CegApi-136"><a href="#CegApi-136"><span class="linenos">136</span></a><span class="sd">        Args:</span>
-</span><span id="CegApi-137"><a href="#CegApi-137"><span class="linenos">137</span></a><span class="sd">            *args: variable lenght arguments list containing gist-ids.</span>
-</span><span id="CegApi-138"><a href="#CegApi-138"><span class="linenos">138</span></a><span class="sd">            is_private: indicates whether to make gist private.</span>
-</span><span id="CegApi-139"><a href="#CegApi-139"><span class="linenos">139</span></a><span class="sd">            gist_description: Description for the gist.</span>
+</span><span id="CegApi-119"><a href="#CegApi-119"><span class="linenos">119</span></a><span class="sd">        Receives arbitrary amount gist-ids and downloads them.</span>
+</span><span id="CegApi-120"><a href="#CegApi-120"><span class="linenos">120</span></a>
+</span><span id="CegApi-121"><a href="#CegApi-121"><span class="linenos">121</span></a><span class="sd">        Args:</span>
+</span><span id="CegApi-122"><a href="#CegApi-122"><span class="linenos">122</span></a><span class="sd">            *args: Variable lenght argument list containing gist-ids.</span>
+</span><span id="CegApi-123"><a href="#CegApi-123"><span class="linenos">123</span></a>
+</span><span id="CegApi-124"><a href="#CegApi-124"><span class="linenos">124</span></a>
+</span><span id="CegApi-125"><a href="#CegApi-125"><span class="linenos">125</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi-126"><a href="#CegApi-126"><span class="linenos">126</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
+</span><span id="CegApi-127"><a href="#CegApi-127"><span class="linenos">127</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi-128"><a href="#CegApi-128"><span class="linenos">128</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
+</span><span id="CegApi-129"><a href="#CegApi-129"><span class="linenos">129</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">((</span><span class="s2">&quot;user:&quot;</span> <span class="o">+</span> <span class="n">username</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="n">args</span><span class="p">)</span> <span class="k">if</span> <span class="n">username</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</span><span id="CegApi-130"><a href="#CegApi-130"><span class="linenos">130</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</span><span id="CegApi-131"><a href="#CegApi-131"><span class="linenos">131</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
+</span><span id="CegApi-132"><a href="#CegApi-132"><span class="linenos">132</span></a>
+</span><span id="CegApi-133"><a href="#CegApi-133"><span class="linenos">133</span></a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span>
+</span><span id="CegApi-134"><a href="#CegApi-134"><span class="linenos">134</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="CegApi-135"><a href="#CegApi-135"><span class="linenos">135</span></a>        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="CegApi-136"><a href="#CegApi-136"><span class="linenos">136</span></a>        <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="CegApi-137"><a href="#CegApi-137"><span class="linenos">137</span></a>        <span class="n">gist_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="CegApi-138"><a href="#CegApi-138"><span class="linenos">138</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="CegApi-139"><a href="#CegApi-139"><span class="linenos">139</span></a>        <span class="sd">&quot;&quot;&quot;Create arbitrary number of gists.</span>
 </span><span id="CegApi-140"><a href="#CegApi-140"><span class="linenos">140</span></a>
-</span><span id="CegApi-141"><a href="#CegApi-141"><span class="linenos">141</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi-142"><a href="#CegApi-142"><span class="linenos">142</span></a><span class="sd">            Returns HTML url for newly created gist.</span>
-</span><span id="CegApi-143"><a href="#CegApi-143"><span class="linenos">143</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi-144"><a href="#CegApi-144"><span class="linenos">144</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;post&quot;</span>
-</span><span id="CegApi-145"><a href="#CegApi-145"><span class="linenos">145</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
-</span><span id="CegApi-146"><a href="#CegApi-146"><span class="linenos">146</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_no_public</span> <span class="o">=</span> <span class="n">is_private</span>
-</span><span id="CegApi-147"><a href="#CegApi-147"><span class="linenos">147</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_description</span> <span class="o">=</span> <span class="n">gist_description</span>
-</span><span id="CegApi-148"><a href="#CegApi-148"><span class="linenos">148</span></a>        <span class="c1"># type casting because of distinct variable types(i.e Optional[str] and str)</span>
-</span><span id="CegApi-149"><a href="#CegApi-149"><span class="linenos">149</span></a>        <span class="c1"># and so so mypy will complain if not type casted</span>
-</span><span id="CegApi-150"><a href="#CegApi-150"><span class="linenos">150</span></a>        <span class="n">gist_html_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">post</span><span class="p">())</span>
-</span><span id="CegApi-151"><a href="#CegApi-151"><span class="linenos">151</span></a>        <span class="k">return</span> <span class="n">gist_html_url</span>
-</span><span id="CegApi-152"><a href="#CegApi-152"><span class="linenos">152</span></a>
-</span><span id="CegApi-153"><a href="#CegApi-153"><span class="linenos">153</span></a>    <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span>
-</span><span id="CegApi-154"><a href="#CegApi-154"><span class="linenos">154</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gist_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gist_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="CegApi-155"><a href="#CegApi-155"><span class="linenos">155</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="CegApi-156"><a href="#CegApi-156"><span class="linenos">156</span></a>        <span class="sd">&quot;&quot;&quot;Modify arbitrary number of existing gists.</span>
+</span><span id="CegApi-141"><a href="#CegApi-141"><span class="linenos">141</span></a><span class="sd">        Args:</span>
+</span><span id="CegApi-142"><a href="#CegApi-142"><span class="linenos">142</span></a><span class="sd">            *args: variable lenght arguments list containing gist-ids.</span>
+</span><span id="CegApi-143"><a href="#CegApi-143"><span class="linenos">143</span></a><span class="sd">            is_private: indicates whether to make gist private.</span>
+</span><span id="CegApi-144"><a href="#CegApi-144"><span class="linenos">144</span></a><span class="sd">            gist_description: Description for the gist.</span>
+</span><span id="CegApi-145"><a href="#CegApi-145"><span class="linenos">145</span></a>
+</span><span id="CegApi-146"><a href="#CegApi-146"><span class="linenos">146</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi-147"><a href="#CegApi-147"><span class="linenos">147</span></a><span class="sd">            Returns HTML url for newly created gist.</span>
+</span><span id="CegApi-148"><a href="#CegApi-148"><span class="linenos">148</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi-149"><a href="#CegApi-149"><span class="linenos">149</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;post&quot;</span>
+</span><span id="CegApi-150"><a href="#CegApi-150"><span class="linenos">150</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
+</span><span id="CegApi-151"><a href="#CegApi-151"><span class="linenos">151</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_no_public</span> <span class="o">=</span> <span class="n">is_private</span>
+</span><span id="CegApi-152"><a href="#CegApi-152"><span class="linenos">152</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_description</span> <span class="o">=</span> <span class="n">gist_description</span>
+</span><span id="CegApi-153"><a href="#CegApi-153"><span class="linenos">153</span></a>        <span class="c1"># type casting because of distinct variable types(i.e Optional[str] and str)</span>
+</span><span id="CegApi-154"><a href="#CegApi-154"><span class="linenos">154</span></a>        <span class="c1"># and so so mypy will complain if not type casted</span>
+</span><span id="CegApi-155"><a href="#CegApi-155"><span class="linenos">155</span></a>        <span class="n">gist_html_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">post</span><span class="p">())</span>
+</span><span id="CegApi-156"><a href="#CegApi-156"><span class="linenos">156</span></a>        <span class="k">return</span> <span class="n">gist_html_url</span>
 </span><span id="CegApi-157"><a href="#CegApi-157"><span class="linenos">157</span></a>
-</span><span id="CegApi-158"><a href="#CegApi-158"><span class="linenos">158</span></a><span class="sd">        Args:</span>
-</span><span id="CegApi-159"><a href="#CegApi-159"><span class="linenos">159</span></a><span class="sd">             *args: variable lenght arguments list containing gist-names.</span>
-</span><span id="CegApi-160"><a href="#CegApi-160"><span class="linenos">160</span></a><span class="sd">             gist_id: gist-id for the gist,that is to be modified.</span>
-</span><span id="CegApi-161"><a href="#CegApi-161"><span class="linenos">161</span></a><span class="sd">             gist_description: (Optional) Description for the gist.</span>
+</span><span id="CegApi-158"><a href="#CegApi-158"><span class="linenos">158</span></a>    <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span>
+</span><span id="CegApi-159"><a href="#CegApi-159"><span class="linenos">159</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gist_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gist_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="CegApi-160"><a href="#CegApi-160"><span class="linenos">160</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="CegApi-161"><a href="#CegApi-161"><span class="linenos">161</span></a>        <span class="sd">&quot;&quot;&quot;Modify arbitrary number of existing gists.</span>
 </span><span id="CegApi-162"><a href="#CegApi-162"><span class="linenos">162</span></a>
-</span><span id="CegApi-163"><a href="#CegApi-163"><span class="linenos">163</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi-164"><a href="#CegApi-164"><span class="linenos">164</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
-</span><span id="CegApi-165"><a href="#CegApi-165"><span class="linenos">165</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi-166"><a href="#CegApi-166"><span class="linenos">166</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;patch&quot;</span>
-</span><span id="CegApi-167"><a href="#CegApi-167"><span class="linenos">167</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-</span><span id="CegApi-168"><a href="#CegApi-168"><span class="linenos">168</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_description</span> <span class="o">=</span> <span class="n">gist_description</span>
-</span><span id="CegApi-169"><a href="#CegApi-169"><span class="linenos">169</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_id</span> <span class="o">=</span> <span class="n">gist_id</span>
-</span><span id="CegApi-170"><a href="#CegApi-170"><span class="linenos">170</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">patch</span><span class="p">()</span>
-</span><span id="CegApi-171"><a href="#CegApi-171"><span class="linenos">171</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
-</span><span id="CegApi-172"><a href="#CegApi-172"><span class="linenos">172</span></a>
-</span><span id="CegApi-173"><a href="#CegApi-173"><span class="linenos">173</span></a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="CegApi-174"><a href="#CegApi-174"><span class="linenos">174</span></a>        <span class="sd">&quot;&quot;&quot;Delete an existing gist.</span>
-</span><span id="CegApi-175"><a href="#CegApi-175"><span class="linenos">175</span></a>
-</span><span id="CegApi-176"><a href="#CegApi-176"><span class="linenos">176</span></a><span class="sd">        Args:</span>
-</span><span id="CegApi-177"><a href="#CegApi-177"><span class="linenos">177</span></a><span class="sd">        gist_id = arbitrary amount of gist-ids.</span>
-</span><span id="CegApi-178"><a href="#CegApi-178"><span class="linenos">178</span></a>
-</span><span id="CegApi-179"><a href="#CegApi-179"><span class="linenos">179</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi-180"><a href="#CegApi-180"><span class="linenos">180</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
-</span><span id="CegApi-181"><a href="#CegApi-181"><span class="linenos">181</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi-182"><a href="#CegApi-182"><span class="linenos">182</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;delete&quot;</span>
-</span><span id="CegApi-183"><a href="#CegApi-183"><span class="linenos">183</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
-</span><span id="CegApi-184"><a href="#CegApi-184"><span class="linenos">184</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-</span><span id="CegApi-185"><a href="#CegApi-185"><span class="linenos">185</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
-</span><span id="CegApi-186"><a href="#CegApi-186"><span class="linenos">186</span></a>
-</span><span id="CegApi-187"><a href="#CegApi-187"><span class="linenos">187</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
-</span><span id="CegApi-188"><a href="#CegApi-188"><span class="linenos">188</span></a>        <span class="sd">&quot;&quot;&quot;Return gist data for authenticated user.</span>
-</span><span id="CegApi-189"><a href="#CegApi-189"><span class="linenos">189</span></a>
-</span><span id="CegApi-190"><a href="#CegApi-190"><span class="linenos">190</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi-191"><a href="#CegApi-191"><span class="linenos">191</span></a><span class="sd">            Returns a sequence containing list of all the gists of user with some info.</span>
-</span><span id="CegApi-192"><a href="#CegApi-192"><span class="linenos">192</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi-193"><a href="#CegApi-193"><span class="linenos">193</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
-</span><span id="CegApi-194"><a href="#CegApi-194"><span class="linenos">194</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
-</span><span id="CegApi-195"><a href="#CegApi-195"><span class="linenos">195</span></a>
-</span><span id="CegApi-196"><a href="#CegApi-196"><span class="linenos">196</span></a>    <span class="k">def</span> <span class="nf">list_other</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
-</span><span id="CegApi-197"><a href="#CegApi-197"><span class="linenos">197</span></a>        <span class="sd">&quot;&quot;&quot;Return gist data for unauthenticated user.</span>
-</span><span id="CegApi-198"><a href="#CegApi-198"><span class="linenos">198</span></a>
-</span><span id="CegApi-199"><a href="#CegApi-199"><span class="linenos">199</span></a><span class="sd">        Args:</span>
-</span><span id="CegApi-200"><a href="#CegApi-200"><span class="linenos">200</span></a><span class="sd">            user_name: username for the user.</span>
-</span><span id="CegApi-201"><a href="#CegApi-201"><span class="linenos">201</span></a>
-</span><span id="CegApi-202"><a href="#CegApi-202"><span class="linenos">202</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi-203"><a href="#CegApi-203"><span class="linenos">203</span></a><span class="sd">            Returns a sequence containing list of all the gists of user with some info.</span>
-</span><span id="CegApi-204"><a href="#CegApi-204"><span class="linenos">204</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi-205"><a href="#CegApi-205"><span class="linenos">205</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
-</span><span id="CegApi-206"><a href="#CegApi-206"><span class="linenos">206</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">user_name</span>
-</span><span id="CegApi-207"><a href="#CegApi-207"><span class="linenos">207</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">list_other</span><span class="p">()</span>
-</span><span id="CegApi-208"><a href="#CegApi-208"><span class="linenos">208</span></a>
-</span><span id="CegApi-209"><a href="#CegApi-209"><span class="linenos">209</span></a>    <span class="k">def</span> <span class="nf">backup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="CegApi-210"><a href="#CegApi-210"><span class="linenos">210</span></a>        <span class="sd">&quot;&quot;&quot;Create backup of all gists on local media.</span>
-</span><span id="CegApi-211"><a href="#CegApi-211"><span class="linenos">211</span></a>
-</span><span id="CegApi-212"><a href="#CegApi-212"><span class="linenos">212</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi-213"><a href="#CegApi-213"><span class="linenos">213</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
-</span><span id="CegApi-214"><a href="#CegApi-214"><span class="linenos">214</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi-215"><a href="#CegApi-215"><span class="linenos">215</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
-</span><span id="CegApi-216"><a href="#CegApi-216"><span class="linenos">216</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">is_recursive_op</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="CegApi-217"><a href="#CegApi-217"><span class="linenos">217</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">backup</span><span class="p">()</span>
-</span><span id="CegApi-218"><a href="#CegApi-218"><span class="linenos">218</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
+</span><span id="CegApi-163"><a href="#CegApi-163"><span class="linenos">163</span></a><span class="sd">        Args:</span>
+</span><span id="CegApi-164"><a href="#CegApi-164"><span class="linenos">164</span></a><span class="sd">             *args: variable lenght arguments list containing gist-names.</span>
+</span><span id="CegApi-165"><a href="#CegApi-165"><span class="linenos">165</span></a><span class="sd">             gist_id: gist-id for the gist,that is to be modified.</span>
+</span><span id="CegApi-166"><a href="#CegApi-166"><span class="linenos">166</span></a><span class="sd">             gist_description: (Optional) Description for the gist.</span>
+</span><span id="CegApi-167"><a href="#CegApi-167"><span class="linenos">167</span></a>
+</span><span id="CegApi-168"><a href="#CegApi-168"><span class="linenos">168</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi-169"><a href="#CegApi-169"><span class="linenos">169</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
+</span><span id="CegApi-170"><a href="#CegApi-170"><span class="linenos">170</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi-171"><a href="#CegApi-171"><span class="linenos">171</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;patch&quot;</span>
+</span><span id="CegApi-172"><a href="#CegApi-172"><span class="linenos">172</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+</span><span id="CegApi-173"><a href="#CegApi-173"><span class="linenos">173</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_description</span> <span class="o">=</span> <span class="n">gist_description</span>
+</span><span id="CegApi-174"><a href="#CegApi-174"><span class="linenos">174</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_id</span> <span class="o">=</span> <span class="n">gist_id</span>
+</span><span id="CegApi-175"><a href="#CegApi-175"><span class="linenos">175</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">patch</span><span class="p">()</span>
+</span><span id="CegApi-176"><a href="#CegApi-176"><span class="linenos">176</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
+</span><span id="CegApi-177"><a href="#CegApi-177"><span class="linenos">177</span></a>
+</span><span id="CegApi-178"><a href="#CegApi-178"><span class="linenos">178</span></a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="CegApi-179"><a href="#CegApi-179"><span class="linenos">179</span></a>        <span class="sd">&quot;&quot;&quot;Delete an existing gist.</span>
+</span><span id="CegApi-180"><a href="#CegApi-180"><span class="linenos">180</span></a>
+</span><span id="CegApi-181"><a href="#CegApi-181"><span class="linenos">181</span></a><span class="sd">        Args:</span>
+</span><span id="CegApi-182"><a href="#CegApi-182"><span class="linenos">182</span></a><span class="sd">        gist_id = arbitrary amount of gist-ids.</span>
+</span><span id="CegApi-183"><a href="#CegApi-183"><span class="linenos">183</span></a>
+</span><span id="CegApi-184"><a href="#CegApi-184"><span class="linenos">184</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi-185"><a href="#CegApi-185"><span class="linenos">185</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
+</span><span id="CegApi-186"><a href="#CegApi-186"><span class="linenos">186</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi-187"><a href="#CegApi-187"><span class="linenos">187</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;delete&quot;</span>
+</span><span id="CegApi-188"><a href="#CegApi-188"><span class="linenos">188</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
+</span><span id="CegApi-189"><a href="#CegApi-189"><span class="linenos">189</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</span><span id="CegApi-190"><a href="#CegApi-190"><span class="linenos">190</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
+</span><span id="CegApi-191"><a href="#CegApi-191"><span class="linenos">191</span></a>
+</span><span id="CegApi-192"><a href="#CegApi-192"><span class="linenos">192</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
+</span><span id="CegApi-193"><a href="#CegApi-193"><span class="linenos">193</span></a>        <span class="sd">&quot;&quot;&quot;Return gist data for authenticated user.</span>
+</span><span id="CegApi-194"><a href="#CegApi-194"><span class="linenos">194</span></a>
+</span><span id="CegApi-195"><a href="#CegApi-195"><span class="linenos">195</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi-196"><a href="#CegApi-196"><span class="linenos">196</span></a><span class="sd">            Returns a sequence containing list of all the gists of user with some info.</span>
+</span><span id="CegApi-197"><a href="#CegApi-197"><span class="linenos">197</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi-198"><a href="#CegApi-198"><span class="linenos">198</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
+</span><span id="CegApi-199"><a href="#CegApi-199"><span class="linenos">199</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</span><span id="CegApi-200"><a href="#CegApi-200"><span class="linenos">200</span></a>
+</span><span id="CegApi-201"><a href="#CegApi-201"><span class="linenos">201</span></a>    <span class="k">def</span> <span class="nf">list_other</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
+</span><span id="CegApi-202"><a href="#CegApi-202"><span class="linenos">202</span></a>        <span class="sd">&quot;&quot;&quot;Return gist data for unauthenticated user.</span>
+</span><span id="CegApi-203"><a href="#CegApi-203"><span class="linenos">203</span></a>
+</span><span id="CegApi-204"><a href="#CegApi-204"><span class="linenos">204</span></a><span class="sd">        Args:</span>
+</span><span id="CegApi-205"><a href="#CegApi-205"><span class="linenos">205</span></a><span class="sd">            user_name: username for the user.</span>
+</span><span id="CegApi-206"><a href="#CegApi-206"><span class="linenos">206</span></a>
+</span><span id="CegApi-207"><a href="#CegApi-207"><span class="linenos">207</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi-208"><a href="#CegApi-208"><span class="linenos">208</span></a><span class="sd">            Returns a sequence containing list of all the gists of user with some info.</span>
+</span><span id="CegApi-209"><a href="#CegApi-209"><span class="linenos">209</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi-210"><a href="#CegApi-210"><span class="linenos">210</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
+</span><span id="CegApi-211"><a href="#CegApi-211"><span class="linenos">211</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">user_name</span>
+</span><span id="CegApi-212"><a href="#CegApi-212"><span class="linenos">212</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">list_other</span><span class="p">()</span>
+</span><span id="CegApi-213"><a href="#CegApi-213"><span class="linenos">213</span></a>
+</span><span id="CegApi-214"><a href="#CegApi-214"><span class="linenos">214</span></a>    <span class="k">def</span> <span class="nf">backup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="CegApi-215"><a href="#CegApi-215"><span class="linenos">215</span></a>        <span class="sd">&quot;&quot;&quot;Create backup of all gists on local media.</span>
+</span><span id="CegApi-216"><a href="#CegApi-216"><span class="linenos">216</span></a>
+</span><span id="CegApi-217"><a href="#CegApi-217"><span class="linenos">217</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi-218"><a href="#CegApi-218"><span class="linenos">218</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
+</span><span id="CegApi-219"><a href="#CegApi-219"><span class="linenos">219</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi-220"><a href="#CegApi-220"><span class="linenos">220</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
+</span><span id="CegApi-221"><a href="#CegApi-221"><span class="linenos">221</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">is_recursive_op</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="CegApi-222"><a href="#CegApi-222"><span class="linenos">222</span></a>        <span class="k">if</span> <span class="n">username</span><span class="p">:</span>
+</span><span id="CegApi-223"><a href="#CegApi-223"><span class="linenos">223</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="s2">&quot;user:&quot;</span> <span class="o">+</span> <span class="n">username</span>
+</span><span id="CegApi-224"><a href="#CegApi-224"><span class="linenos">224</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">backup</span><span class="p">()</span>
+</span><span id="CegApi-225"><a href="#CegApi-225"><span class="linenos">225</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
 </span></pre></div>
 
 
@@ -535,19 +549,19 @@ implementation of ceg utility.</li>
 
     </div>
     <a class="headerlink" href="#CegApi.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.__init__-97"><a href="#CegApi.__init__-97"><span class="linenos"> 97</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="CegApi.__init__-98"><a href="#CegApi.__init__-98"><span class="linenos"> 98</span></a>        <span class="sd">&quot;&quot;&quot;Inits CegApi with github secret key&quot;&quot;&quot;</span>
-</span><span id="CegApi.__init__-99"><a href="#CegApi.__init__-99"><span class="linenos"> 99</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="p">:</span> <span class="n">Ceg</span> <span class="o">=</span> <span class="n">Ceg</span><span class="p">(</span>
-</span><span id="CegApi.__init__-100"><a href="#CegApi.__init__-100"><span class="linenos">100</span></a>            <span class="n">operation</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="CegApi.__init__-101"><a href="#CegApi.__init__-101"><span class="linenos">101</span></a>            <span class="n">arg_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="CegApi.__init__-102"><a href="#CegApi.__init__-102"><span class="linenos">102</span></a>            <span class="n">is_recursive_operation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="CegApi.__init__-103"><a href="#CegApi.__init__-103"><span class="linenos">103</span></a>            <span class="n">is_other_user</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="CegApi.__init__-104"><a href="#CegApi.__init__-104"><span class="linenos">104</span></a>            <span class="n">secret_key</span><span class="o">=</span><span class="n">secret_key</span><span class="p">,</span>
-</span><span id="CegApi.__init__-105"><a href="#CegApi.__init__-105"><span class="linenos">105</span></a>            <span class="n">do_logging</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="CegApi.__init__-106"><a href="#CegApi.__init__-106"><span class="linenos">106</span></a>            <span class="n">gist_no_public</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="CegApi.__init__-107"><a href="#CegApi.__init__-107"><span class="linenos">107</span></a>            <span class="n">gist_desc</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="CegApi.__init__-108"><a href="#CegApi.__init__-108"><span class="linenos">108</span></a>            <span class="n">gist_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="CegApi.__init__-109"><a href="#CegApi.__init__-109"><span class="linenos">109</span></a>        <span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.__init__-102"><a href="#CegApi.__init__-102"><span class="linenos">102</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="CegApi.__init__-103"><a href="#CegApi.__init__-103"><span class="linenos">103</span></a>        <span class="sd">&quot;&quot;&quot;Inits CegApi with github secret key&quot;&quot;&quot;</span>
+</span><span id="CegApi.__init__-104"><a href="#CegApi.__init__-104"><span class="linenos">104</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="p">:</span> <span class="n">Ceg</span> <span class="o">=</span> <span class="n">Ceg</span><span class="p">(</span>
+</span><span id="CegApi.__init__-105"><a href="#CegApi.__init__-105"><span class="linenos">105</span></a>            <span class="n">operation</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="CegApi.__init__-106"><a href="#CegApi.__init__-106"><span class="linenos">106</span></a>            <span class="n">arg_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="CegApi.__init__-107"><a href="#CegApi.__init__-107"><span class="linenos">107</span></a>            <span class="n">is_recursive_operation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="CegApi.__init__-108"><a href="#CegApi.__init__-108"><span class="linenos">108</span></a>            <span class="n">is_other_user</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="CegApi.__init__-109"><a href="#CegApi.__init__-109"><span class="linenos">109</span></a>            <span class="n">secret_key</span><span class="o">=</span><span class="n">secret_key</span><span class="p">,</span>
+</span><span id="CegApi.__init__-110"><a href="#CegApi.__init__-110"><span class="linenos">110</span></a>            <span class="n">do_logging</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="CegApi.__init__-111"><a href="#CegApi.__init__-111"><span class="linenos">111</span></a>            <span class="n">gist_no_public</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="CegApi.__init__-112"><a href="#CegApi.__init__-112"><span class="linenos">112</span></a>            <span class="n">gist_desc</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="CegApi.__init__-113"><a href="#CegApi.__init__-113"><span class="linenos">113</span></a>            <span class="n">gist_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="CegApi.__init__-114"><a href="#CegApi.__init__-114"><span class="linenos">114</span></a>        <span class="p">)</span>
 </span></pre></div>
 
 
@@ -561,28 +575,28 @@ implementation of ceg utility.</li>
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">get</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
+        <span class="name">get</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
 
                 <label class="view-source-button" for="CegApi.get-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#CegApi.get"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.get-111"><a href="#CegApi.get-111"><span class="linenos">111</span></a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="CegApi.get-112"><a href="#CegApi.get-112"><span class="linenos">112</span></a>        <span class="sd">&quot;&quot;&quot;Downloads a gist.</span>
-</span><span id="CegApi.get-113"><a href="#CegApi.get-113"><span class="linenos">113</span></a>
-</span><span id="CegApi.get-114"><a href="#CegApi.get-114"><span class="linenos">114</span></a><span class="sd">        Receives arbitrary amount gist-ids and downloads them.</span>
-</span><span id="CegApi.get-115"><a href="#CegApi.get-115"><span class="linenos">115</span></a>
-</span><span id="CegApi.get-116"><a href="#CegApi.get-116"><span class="linenos">116</span></a><span class="sd">        Args:</span>
-</span><span id="CegApi.get-117"><a href="#CegApi.get-117"><span class="linenos">117</span></a><span class="sd">            *args: Variable lenght argument list containing gist-ids.</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.get-116"><a href="#CegApi.get-116"><span class="linenos">116</span></a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="CegApi.get-117"><a href="#CegApi.get-117"><span class="linenos">117</span></a>        <span class="sd">&quot;&quot;&quot;Downloads a gist.</span>
 </span><span id="CegApi.get-118"><a href="#CegApi.get-118"><span class="linenos">118</span></a>
-</span><span id="CegApi.get-119"><a href="#CegApi.get-119"><span class="linenos">119</span></a>
-</span><span id="CegApi.get-120"><a href="#CegApi.get-120"><span class="linenos">120</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi.get-121"><a href="#CegApi.get-121"><span class="linenos">121</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
-</span><span id="CegApi.get-122"><a href="#CegApi.get-122"><span class="linenos">122</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi.get-123"><a href="#CegApi.get-123"><span class="linenos">123</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
-</span><span id="CegApi.get-124"><a href="#CegApi.get-124"><span class="linenos">124</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
-</span><span id="CegApi.get-125"><a href="#CegApi.get-125"><span class="linenos">125</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="CegApi.get-126"><a href="#CegApi.get-126"><span class="linenos">126</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
+</span><span id="CegApi.get-119"><a href="#CegApi.get-119"><span class="linenos">119</span></a><span class="sd">        Receives arbitrary amount gist-ids and downloads them.</span>
+</span><span id="CegApi.get-120"><a href="#CegApi.get-120"><span class="linenos">120</span></a>
+</span><span id="CegApi.get-121"><a href="#CegApi.get-121"><span class="linenos">121</span></a><span class="sd">        Args:</span>
+</span><span id="CegApi.get-122"><a href="#CegApi.get-122"><span class="linenos">122</span></a><span class="sd">            *args: Variable lenght argument list containing gist-ids.</span>
+</span><span id="CegApi.get-123"><a href="#CegApi.get-123"><span class="linenos">123</span></a>
+</span><span id="CegApi.get-124"><a href="#CegApi.get-124"><span class="linenos">124</span></a>
+</span><span id="CegApi.get-125"><a href="#CegApi.get-125"><span class="linenos">125</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi.get-126"><a href="#CegApi.get-126"><span class="linenos">126</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
+</span><span id="CegApi.get-127"><a href="#CegApi.get-127"><span class="linenos">127</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi.get-128"><a href="#CegApi.get-128"><span class="linenos">128</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
+</span><span id="CegApi.get-129"><a href="#CegApi.get-129"><span class="linenos">129</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">((</span><span class="s2">&quot;user:&quot;</span> <span class="o">+</span> <span class="n">username</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="n">args</span><span class="p">)</span> <span class="k">if</span> <span class="n">username</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</span><span id="CegApi.get-130"><a href="#CegApi.get-130"><span class="linenos">130</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</span><span id="CegApi.get-131"><a href="#CegApi.get-131"><span class="linenos">131</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
 </span></pre></div>
 
 
@@ -616,30 +630,30 @@ implementation of ceg utility.</li>
 
     </div>
     <a class="headerlink" href="#CegApi.post"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.post-128"><a href="#CegApi.post-128"><span class="linenos">128</span></a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span>
-</span><span id="CegApi.post-129"><a href="#CegApi.post-129"><span class="linenos">129</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="CegApi.post-130"><a href="#CegApi.post-130"><span class="linenos">130</span></a>        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="CegApi.post-131"><a href="#CegApi.post-131"><span class="linenos">131</span></a>        <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="CegApi.post-132"><a href="#CegApi.post-132"><span class="linenos">132</span></a>        <span class="n">gist_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="CegApi.post-133"><a href="#CegApi.post-133"><span class="linenos">133</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="CegApi.post-134"><a href="#CegApi.post-134"><span class="linenos">134</span></a>        <span class="sd">&quot;&quot;&quot;Create arbitrary number of gists.</span>
-</span><span id="CegApi.post-135"><a href="#CegApi.post-135"><span class="linenos">135</span></a>
-</span><span id="CegApi.post-136"><a href="#CegApi.post-136"><span class="linenos">136</span></a><span class="sd">        Args:</span>
-</span><span id="CegApi.post-137"><a href="#CegApi.post-137"><span class="linenos">137</span></a><span class="sd">            *args: variable lenght arguments list containing gist-ids.</span>
-</span><span id="CegApi.post-138"><a href="#CegApi.post-138"><span class="linenos">138</span></a><span class="sd">            is_private: indicates whether to make gist private.</span>
-</span><span id="CegApi.post-139"><a href="#CegApi.post-139"><span class="linenos">139</span></a><span class="sd">            gist_description: Description for the gist.</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.post-133"><a href="#CegApi.post-133"><span class="linenos">133</span></a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span>
+</span><span id="CegApi.post-134"><a href="#CegApi.post-134"><span class="linenos">134</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="CegApi.post-135"><a href="#CegApi.post-135"><span class="linenos">135</span></a>        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="CegApi.post-136"><a href="#CegApi.post-136"><span class="linenos">136</span></a>        <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="CegApi.post-137"><a href="#CegApi.post-137"><span class="linenos">137</span></a>        <span class="n">gist_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="CegApi.post-138"><a href="#CegApi.post-138"><span class="linenos">138</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="CegApi.post-139"><a href="#CegApi.post-139"><span class="linenos">139</span></a>        <span class="sd">&quot;&quot;&quot;Create arbitrary number of gists.</span>
 </span><span id="CegApi.post-140"><a href="#CegApi.post-140"><span class="linenos">140</span></a>
-</span><span id="CegApi.post-141"><a href="#CegApi.post-141"><span class="linenos">141</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi.post-142"><a href="#CegApi.post-142"><span class="linenos">142</span></a><span class="sd">            Returns HTML url for newly created gist.</span>
-</span><span id="CegApi.post-143"><a href="#CegApi.post-143"><span class="linenos">143</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi.post-144"><a href="#CegApi.post-144"><span class="linenos">144</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;post&quot;</span>
-</span><span id="CegApi.post-145"><a href="#CegApi.post-145"><span class="linenos">145</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
-</span><span id="CegApi.post-146"><a href="#CegApi.post-146"><span class="linenos">146</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_no_public</span> <span class="o">=</span> <span class="n">is_private</span>
-</span><span id="CegApi.post-147"><a href="#CegApi.post-147"><span class="linenos">147</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_description</span> <span class="o">=</span> <span class="n">gist_description</span>
-</span><span id="CegApi.post-148"><a href="#CegApi.post-148"><span class="linenos">148</span></a>        <span class="c1"># type casting because of distinct variable types(i.e Optional[str] and str)</span>
-</span><span id="CegApi.post-149"><a href="#CegApi.post-149"><span class="linenos">149</span></a>        <span class="c1"># and so so mypy will complain if not type casted</span>
-</span><span id="CegApi.post-150"><a href="#CegApi.post-150"><span class="linenos">150</span></a>        <span class="n">gist_html_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">post</span><span class="p">())</span>
-</span><span id="CegApi.post-151"><a href="#CegApi.post-151"><span class="linenos">151</span></a>        <span class="k">return</span> <span class="n">gist_html_url</span>
+</span><span id="CegApi.post-141"><a href="#CegApi.post-141"><span class="linenos">141</span></a><span class="sd">        Args:</span>
+</span><span id="CegApi.post-142"><a href="#CegApi.post-142"><span class="linenos">142</span></a><span class="sd">            *args: variable lenght arguments list containing gist-ids.</span>
+</span><span id="CegApi.post-143"><a href="#CegApi.post-143"><span class="linenos">143</span></a><span class="sd">            is_private: indicates whether to make gist private.</span>
+</span><span id="CegApi.post-144"><a href="#CegApi.post-144"><span class="linenos">144</span></a><span class="sd">            gist_description: Description for the gist.</span>
+</span><span id="CegApi.post-145"><a href="#CegApi.post-145"><span class="linenos">145</span></a>
+</span><span id="CegApi.post-146"><a href="#CegApi.post-146"><span class="linenos">146</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi.post-147"><a href="#CegApi.post-147"><span class="linenos">147</span></a><span class="sd">            Returns HTML url for newly created gist.</span>
+</span><span id="CegApi.post-148"><a href="#CegApi.post-148"><span class="linenos">148</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi.post-149"><a href="#CegApi.post-149"><span class="linenos">149</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;post&quot;</span>
+</span><span id="CegApi.post-150"><a href="#CegApi.post-150"><span class="linenos">150</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
+</span><span id="CegApi.post-151"><a href="#CegApi.post-151"><span class="linenos">151</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_no_public</span> <span class="o">=</span> <span class="n">is_private</span>
+</span><span id="CegApi.post-152"><a href="#CegApi.post-152"><span class="linenos">152</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_description</span> <span class="o">=</span> <span class="n">gist_description</span>
+</span><span id="CegApi.post-153"><a href="#CegApi.post-153"><span class="linenos">153</span></a>        <span class="c1"># type casting because of distinct variable types(i.e Optional[str] and str)</span>
+</span><span id="CegApi.post-154"><a href="#CegApi.post-154"><span class="linenos">154</span></a>        <span class="c1"># and so so mypy will complain if not type casted</span>
+</span><span id="CegApi.post-155"><a href="#CegApi.post-155"><span class="linenos">155</span></a>        <span class="n">gist_html_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">post</span><span class="p">())</span>
+</span><span id="CegApi.post-156"><a href="#CegApi.post-156"><span class="linenos">156</span></a>        <span class="k">return</span> <span class="n">gist_html_url</span>
 </span></pre></div>
 
 
@@ -673,25 +687,25 @@ implementation of ceg utility.</li>
 
     </div>
     <a class="headerlink" href="#CegApi.patch"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.patch-153"><a href="#CegApi.patch-153"><span class="linenos">153</span></a>    <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span>
-</span><span id="CegApi.patch-154"><a href="#CegApi.patch-154"><span class="linenos">154</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gist_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gist_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="CegApi.patch-155"><a href="#CegApi.patch-155"><span class="linenos">155</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="CegApi.patch-156"><a href="#CegApi.patch-156"><span class="linenos">156</span></a>        <span class="sd">&quot;&quot;&quot;Modify arbitrary number of existing gists.</span>
-</span><span id="CegApi.patch-157"><a href="#CegApi.patch-157"><span class="linenos">157</span></a>
-</span><span id="CegApi.patch-158"><a href="#CegApi.patch-158"><span class="linenos">158</span></a><span class="sd">        Args:</span>
-</span><span id="CegApi.patch-159"><a href="#CegApi.patch-159"><span class="linenos">159</span></a><span class="sd">             *args: variable lenght arguments list containing gist-names.</span>
-</span><span id="CegApi.patch-160"><a href="#CegApi.patch-160"><span class="linenos">160</span></a><span class="sd">             gist_id: gist-id for the gist,that is to be modified.</span>
-</span><span id="CegApi.patch-161"><a href="#CegApi.patch-161"><span class="linenos">161</span></a><span class="sd">             gist_description: (Optional) Description for the gist.</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.patch-158"><a href="#CegApi.patch-158"><span class="linenos">158</span></a>    <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span>
+</span><span id="CegApi.patch-159"><a href="#CegApi.patch-159"><span class="linenos">159</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gist_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gist_description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="CegApi.patch-160"><a href="#CegApi.patch-160"><span class="linenos">160</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="CegApi.patch-161"><a href="#CegApi.patch-161"><span class="linenos">161</span></a>        <span class="sd">&quot;&quot;&quot;Modify arbitrary number of existing gists.</span>
 </span><span id="CegApi.patch-162"><a href="#CegApi.patch-162"><span class="linenos">162</span></a>
-</span><span id="CegApi.patch-163"><a href="#CegApi.patch-163"><span class="linenos">163</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi.patch-164"><a href="#CegApi.patch-164"><span class="linenos">164</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
-</span><span id="CegApi.patch-165"><a href="#CegApi.patch-165"><span class="linenos">165</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi.patch-166"><a href="#CegApi.patch-166"><span class="linenos">166</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;patch&quot;</span>
-</span><span id="CegApi.patch-167"><a href="#CegApi.patch-167"><span class="linenos">167</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-</span><span id="CegApi.patch-168"><a href="#CegApi.patch-168"><span class="linenos">168</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_description</span> <span class="o">=</span> <span class="n">gist_description</span>
-</span><span id="CegApi.patch-169"><a href="#CegApi.patch-169"><span class="linenos">169</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_id</span> <span class="o">=</span> <span class="n">gist_id</span>
-</span><span id="CegApi.patch-170"><a href="#CegApi.patch-170"><span class="linenos">170</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">patch</span><span class="p">()</span>
-</span><span id="CegApi.patch-171"><a href="#CegApi.patch-171"><span class="linenos">171</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
+</span><span id="CegApi.patch-163"><a href="#CegApi.patch-163"><span class="linenos">163</span></a><span class="sd">        Args:</span>
+</span><span id="CegApi.patch-164"><a href="#CegApi.patch-164"><span class="linenos">164</span></a><span class="sd">             *args: variable lenght arguments list containing gist-names.</span>
+</span><span id="CegApi.patch-165"><a href="#CegApi.patch-165"><span class="linenos">165</span></a><span class="sd">             gist_id: gist-id for the gist,that is to be modified.</span>
+</span><span id="CegApi.patch-166"><a href="#CegApi.patch-166"><span class="linenos">166</span></a><span class="sd">             gist_description: (Optional) Description for the gist.</span>
+</span><span id="CegApi.patch-167"><a href="#CegApi.patch-167"><span class="linenos">167</span></a>
+</span><span id="CegApi.patch-168"><a href="#CegApi.patch-168"><span class="linenos">168</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi.patch-169"><a href="#CegApi.patch-169"><span class="linenos">169</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
+</span><span id="CegApi.patch-170"><a href="#CegApi.patch-170"><span class="linenos">170</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi.patch-171"><a href="#CegApi.patch-171"><span class="linenos">171</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;patch&quot;</span>
+</span><span id="CegApi.patch-172"><a href="#CegApi.patch-172"><span class="linenos">172</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+</span><span id="CegApi.patch-173"><a href="#CegApi.patch-173"><span class="linenos">173</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_description</span> <span class="o">=</span> <span class="n">gist_description</span>
+</span><span id="CegApi.patch-174"><a href="#CegApi.patch-174"><span class="linenos">174</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">gist_id</span> <span class="o">=</span> <span class="n">gist_id</span>
+</span><span id="CegApi.patch-175"><a href="#CegApi.patch-175"><span class="linenos">175</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">patch</span><span class="p">()</span>
+</span><span id="CegApi.patch-176"><a href="#CegApi.patch-176"><span class="linenos">176</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
 </span></pre></div>
 
 
@@ -725,19 +739,19 @@ implementation of ceg utility.</li>
 
     </div>
     <a class="headerlink" href="#CegApi.delete"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.delete-173"><a href="#CegApi.delete-173"><span class="linenos">173</span></a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="CegApi.delete-174"><a href="#CegApi.delete-174"><span class="linenos">174</span></a>        <span class="sd">&quot;&quot;&quot;Delete an existing gist.</span>
-</span><span id="CegApi.delete-175"><a href="#CegApi.delete-175"><span class="linenos">175</span></a>
-</span><span id="CegApi.delete-176"><a href="#CegApi.delete-176"><span class="linenos">176</span></a><span class="sd">        Args:</span>
-</span><span id="CegApi.delete-177"><a href="#CegApi.delete-177"><span class="linenos">177</span></a><span class="sd">        gist_id = arbitrary amount of gist-ids.</span>
-</span><span id="CegApi.delete-178"><a href="#CegApi.delete-178"><span class="linenos">178</span></a>
-</span><span id="CegApi.delete-179"><a href="#CegApi.delete-179"><span class="linenos">179</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi.delete-180"><a href="#CegApi.delete-180"><span class="linenos">180</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
-</span><span id="CegApi.delete-181"><a href="#CegApi.delete-181"><span class="linenos">181</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi.delete-182"><a href="#CegApi.delete-182"><span class="linenos">182</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;delete&quot;</span>
-</span><span id="CegApi.delete-183"><a href="#CegApi.delete-183"><span class="linenos">183</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
-</span><span id="CegApi.delete-184"><a href="#CegApi.delete-184"><span class="linenos">184</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-</span><span id="CegApi.delete-185"><a href="#CegApi.delete-185"><span class="linenos">185</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.delete-178"><a href="#CegApi.delete-178"><span class="linenos">178</span></a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="CegApi.delete-179"><a href="#CegApi.delete-179"><span class="linenos">179</span></a>        <span class="sd">&quot;&quot;&quot;Delete an existing gist.</span>
+</span><span id="CegApi.delete-180"><a href="#CegApi.delete-180"><span class="linenos">180</span></a>
+</span><span id="CegApi.delete-181"><a href="#CegApi.delete-181"><span class="linenos">181</span></a><span class="sd">        Args:</span>
+</span><span id="CegApi.delete-182"><a href="#CegApi.delete-182"><span class="linenos">182</span></a><span class="sd">        gist_id = arbitrary amount of gist-ids.</span>
+</span><span id="CegApi.delete-183"><a href="#CegApi.delete-183"><span class="linenos">183</span></a>
+</span><span id="CegApi.delete-184"><a href="#CegApi.delete-184"><span class="linenos">184</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi.delete-185"><a href="#CegApi.delete-185"><span class="linenos">185</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
+</span><span id="CegApi.delete-186"><a href="#CegApi.delete-186"><span class="linenos">186</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi.delete-187"><a href="#CegApi.delete-187"><span class="linenos">187</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;delete&quot;</span>
+</span><span id="CegApi.delete-188"><a href="#CegApi.delete-188"><span class="linenos">188</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">args</span>
+</span><span id="CegApi.delete-189"><a href="#CegApi.delete-189"><span class="linenos">189</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</span><span id="CegApi.delete-190"><a href="#CegApi.delete-190"><span class="linenos">190</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
 </span></pre></div>
 
 
@@ -766,14 +780,14 @@ gist_id = arbitrary amount of gist-ids.</p>
 
     </div>
     <a class="headerlink" href="#CegApi.list"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.list-187"><a href="#CegApi.list-187"><span class="linenos">187</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
-</span><span id="CegApi.list-188"><a href="#CegApi.list-188"><span class="linenos">188</span></a>        <span class="sd">&quot;&quot;&quot;Return gist data for authenticated user.</span>
-</span><span id="CegApi.list-189"><a href="#CegApi.list-189"><span class="linenos">189</span></a>
-</span><span id="CegApi.list-190"><a href="#CegApi.list-190"><span class="linenos">190</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi.list-191"><a href="#CegApi.list-191"><span class="linenos">191</span></a><span class="sd">            Returns a sequence containing list of all the gists of user with some info.</span>
-</span><span id="CegApi.list-192"><a href="#CegApi.list-192"><span class="linenos">192</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi.list-193"><a href="#CegApi.list-193"><span class="linenos">193</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
-</span><span id="CegApi.list-194"><a href="#CegApi.list-194"><span class="linenos">194</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.list-192"><a href="#CegApi.list-192"><span class="linenos">192</span></a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
+</span><span id="CegApi.list-193"><a href="#CegApi.list-193"><span class="linenos">193</span></a>        <span class="sd">&quot;&quot;&quot;Return gist data for authenticated user.</span>
+</span><span id="CegApi.list-194"><a href="#CegApi.list-194"><span class="linenos">194</span></a>
+</span><span id="CegApi.list-195"><a href="#CegApi.list-195"><span class="linenos">195</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi.list-196"><a href="#CegApi.list-196"><span class="linenos">196</span></a><span class="sd">            Returns a sequence containing list of all the gists of user with some info.</span>
+</span><span id="CegApi.list-197"><a href="#CegApi.list-197"><span class="linenos">197</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi.list-198"><a href="#CegApi.list-198"><span class="linenos">198</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
+</span><span id="CegApi.list-199"><a href="#CegApi.list-199"><span class="linenos">199</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -799,18 +813,18 @@ gist_id = arbitrary amount of gist-ids.</p>
 
     </div>
     <a class="headerlink" href="#CegApi.list_other"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.list_other-196"><a href="#CegApi.list_other-196"><span class="linenos">196</span></a>    <span class="k">def</span> <span class="nf">list_other</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
-</span><span id="CegApi.list_other-197"><a href="#CegApi.list_other-197"><span class="linenos">197</span></a>        <span class="sd">&quot;&quot;&quot;Return gist data for unauthenticated user.</span>
-</span><span id="CegApi.list_other-198"><a href="#CegApi.list_other-198"><span class="linenos">198</span></a>
-</span><span id="CegApi.list_other-199"><a href="#CegApi.list_other-199"><span class="linenos">199</span></a><span class="sd">        Args:</span>
-</span><span id="CegApi.list_other-200"><a href="#CegApi.list_other-200"><span class="linenos">200</span></a><span class="sd">            user_name: username for the user.</span>
-</span><span id="CegApi.list_other-201"><a href="#CegApi.list_other-201"><span class="linenos">201</span></a>
-</span><span id="CegApi.list_other-202"><a href="#CegApi.list_other-202"><span class="linenos">202</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi.list_other-203"><a href="#CegApi.list_other-203"><span class="linenos">203</span></a><span class="sd">            Returns a sequence containing list of all the gists of user with some info.</span>
-</span><span id="CegApi.list_other-204"><a href="#CegApi.list_other-204"><span class="linenos">204</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi.list_other-205"><a href="#CegApi.list_other-205"><span class="linenos">205</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
-</span><span id="CegApi.list_other-206"><a href="#CegApi.list_other-206"><span class="linenos">206</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">user_name</span>
-</span><span id="CegApi.list_other-207"><a href="#CegApi.list_other-207"><span class="linenos">207</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">list_other</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.list_other-201"><a href="#CegApi.list_other-201"><span class="linenos">201</span></a>    <span class="k">def</span> <span class="nf">list_other</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
+</span><span id="CegApi.list_other-202"><a href="#CegApi.list_other-202"><span class="linenos">202</span></a>        <span class="sd">&quot;&quot;&quot;Return gist data for unauthenticated user.</span>
+</span><span id="CegApi.list_other-203"><a href="#CegApi.list_other-203"><span class="linenos">203</span></a>
+</span><span id="CegApi.list_other-204"><a href="#CegApi.list_other-204"><span class="linenos">204</span></a><span class="sd">        Args:</span>
+</span><span id="CegApi.list_other-205"><a href="#CegApi.list_other-205"><span class="linenos">205</span></a><span class="sd">            user_name: username for the user.</span>
+</span><span id="CegApi.list_other-206"><a href="#CegApi.list_other-206"><span class="linenos">206</span></a>
+</span><span id="CegApi.list_other-207"><a href="#CegApi.list_other-207"><span class="linenos">207</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi.list_other-208"><a href="#CegApi.list_other-208"><span class="linenos">208</span></a><span class="sd">            Returns a sequence containing list of all the gists of user with some info.</span>
+</span><span id="CegApi.list_other-209"><a href="#CegApi.list_other-209"><span class="linenos">209</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi.list_other-210"><a href="#CegApi.list_other-210"><span class="linenos">210</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
+</span><span id="CegApi.list_other-211"><a href="#CegApi.list_other-211"><span class="linenos">211</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="n">user_name</span>
+</span><span id="CegApi.list_other-212"><a href="#CegApi.list_other-212"><span class="linenos">212</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">list_other</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -836,22 +850,24 @@ gist_id = arbitrary amount of gist-ids.</p>
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">backup</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
+        <span class="name">backup</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
 
                 <label class="view-source-button" for="CegApi.backup-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#CegApi.backup"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.backup-209"><a href="#CegApi.backup-209"><span class="linenos">209</span></a>    <span class="k">def</span> <span class="nf">backup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="CegApi.backup-210"><a href="#CegApi.backup-210"><span class="linenos">210</span></a>        <span class="sd">&quot;&quot;&quot;Create backup of all gists on local media.</span>
-</span><span id="CegApi.backup-211"><a href="#CegApi.backup-211"><span class="linenos">211</span></a>
-</span><span id="CegApi.backup-212"><a href="#CegApi.backup-212"><span class="linenos">212</span></a><span class="sd">        Returns:</span>
-</span><span id="CegApi.backup-213"><a href="#CegApi.backup-213"><span class="linenos">213</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
-</span><span id="CegApi.backup-214"><a href="#CegApi.backup-214"><span class="linenos">214</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="CegApi.backup-215"><a href="#CegApi.backup-215"><span class="linenos">215</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
-</span><span id="CegApi.backup-216"><a href="#CegApi.backup-216"><span class="linenos">216</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">is_recursive_op</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="CegApi.backup-217"><a href="#CegApi.backup-217"><span class="linenos">217</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">backup</span><span class="p">()</span>
-</span><span id="CegApi.backup-218"><a href="#CegApi.backup-218"><span class="linenos">218</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CegApi.backup-214"><a href="#CegApi.backup-214"><span class="linenos">214</span></a>    <span class="k">def</span> <span class="nf">backup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="CegApi.backup-215"><a href="#CegApi.backup-215"><span class="linenos">215</span></a>        <span class="sd">&quot;&quot;&quot;Create backup of all gists on local media.</span>
+</span><span id="CegApi.backup-216"><a href="#CegApi.backup-216"><span class="linenos">216</span></a>
+</span><span id="CegApi.backup-217"><a href="#CegApi.backup-217"><span class="linenos">217</span></a><span class="sd">        Returns:</span>
+</span><span id="CegApi.backup-218"><a href="#CegApi.backup-218"><span class="linenos">218</span></a><span class="sd">            Returns HTTP call response status in string format.</span>
+</span><span id="CegApi.backup-219"><a href="#CegApi.backup-219"><span class="linenos">219</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="CegApi.backup-220"><a href="#CegApi.backup-220"><span class="linenos">220</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">http_operation</span> <span class="o">=</span> <span class="s2">&quot;get&quot;</span>
+</span><span id="CegApi.backup-221"><a href="#CegApi.backup-221"><span class="linenos">221</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">is_recursive_op</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="CegApi.backup-222"><a href="#CegApi.backup-222"><span class="linenos">222</span></a>        <span class="k">if</span> <span class="n">username</span><span class="p">:</span>
+</span><span id="CegApi.backup-223"><a href="#CegApi.backup-223"><span class="linenos">223</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">arg_val</span> <span class="o">=</span> <span class="s2">&quot;user:&quot;</span> <span class="o">+</span> <span class="n">username</span>
+</span><span id="CegApi.backup-224"><a href="#CegApi.backup-224"><span class="linenos">224</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">backup</span><span class="p">()</span>
+</span><span id="CegApi.backup-225"><a href="#CegApi.backup-225"><span class="linenos">225</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceg_instance</span><span class="o">.</span><span class="n">response_status_str</span>
 </span></pre></div>
 
 

@@ -33,6 +33,7 @@ Typical usage example
 Object instantiation:
 ```
 cgi = CegApi(secret_key="abcd")
+# note that for using an instance for unauthenticated user, set secret_key to `None`
 ```
 For creating a gist:
 ```
@@ -60,12 +61,16 @@ user_gist_list = cgi.list_other("username")
 For downloading a gist:
 ```
 response_str = cgi.get("gistid1", "gistid2")
+# or for unauthenticated users
+response_str = ceg.get("gistid1", "gistid2", username="myusername")
 # note that gist-ids are typically hashes like 'aa5a315d61ae9438b18d'
 ```
 
 For creating a backup:
 ```
 response_str = cgi.backup()
+# or for unauthenticated users
+response_str = cgi.backup(username="myusername")
 ```
 
 For deleting a gist:
@@ -107,7 +112,7 @@ class CegApi:
             gist_id="",
         )
 
-    def get(self, *args: str) -> str:
+    def get(self, *args: str, username: Optional[str] = None) -> str:
         """Downloads a gist.
 
         Receives arbitrary amount gist-ids and downloads them.
@@ -120,7 +125,7 @@ class CegApi:
             Returns HTTP call response status in string format.
         """
         self.ceg_instance.http_operation = "get"
-        self.ceg_instance.arg_val = args
+        self.ceg_instance.arg_val = list(("user:" + username, ) + args) if username else list(args)
         self.ceg_instance.get()
         return self.ceg_instance.response_status_str
 
@@ -205,7 +210,7 @@ class CegApi:
         self.ceg_instance.arg_val = user_name
         return self.ceg_instance.list_other()
 
-    def backup(self) -> str:
+    def backup(self, username: Optional[str] = None) -> str:
         """Create backup of all gists on local media.
 
         Returns:
@@ -213,5 +218,7 @@ class CegApi:
         """
         self.ceg_instance.http_operation = "get"
         self.ceg_instance.is_recursive_op = True
+        if username:
+            self.ceg_instance.arg_val = "user:" + username
         self.ceg_instance.backup()
         return self.ceg_instance.response_status_str
