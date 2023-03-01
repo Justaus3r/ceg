@@ -99,40 +99,39 @@ Usage
 -----
 ::
 
-   usage: ceg [options] [sub-arguments]
+usage: ceg [options] [sub-arguments]
 
-   A simple gist crud utility.
+An all in one github's gist manager.
 
-   options:
-   -h, --help            show this help message and exit
-   -po GISTNAME [GISTNAME ...], --post GISTNAME [GISTNAME ...]
+options:
+  -h, --help            show this help message and exit
+  -po GISTNAME [GISTNAME ...], --post GISTNAME [GISTNAME ...]
                         create a gist
-   -pa GISTNAME [GISTNAME ...], --patch GISTNAME [GISTNAME ...]
+  -pa GISTNAME [GISTNAME ...], --patch GISTNAME [GISTNAME ...]
                         modify an existing gist
-   -g GISTID [GISTID ...], --get GISTID [GISTID ...]
-                        Download gist(s)
-   -d GISTID [GISTID ...], --delete GISTID [GISTID ...]
+  -g GISTID [GISTID ...], --get GISTID [GISTID ...]
+                        download gist(s)
+  -d GISTID [GISTID ...], --delete GISTID [GISTID ...]
                         remove gist(s)
-   -l, --list            list public/private gists for authenticated user
-   -lo USERNAME, --list-other USERNAME
-                        list public gists for unauthenticated users
-   -bk, --backup         create a backup of all gists
-   -sk SECRETKEY, --secret-key SECRETKEY
+  -l [OPT-USERNAME], --list [OPT-USERNAME]
+                        list public/private gists for a user
+  -bk [OPT-USERNAME], --backup [OPT-USERNAME]
+                        create a backup of all gists
+  -sk SECRETKEY, --secret-key SECRETKEY
                         user's github secret key
-   -nl, --no-logging     don't log anything to stdout
-   -v, --version         show utility's semantic version
+  -nl, --no-logging     don't log anything to stdout
+  -v, --version         show utility's semantic version
 
-   sub-arguments:
-   --post/-po
+sub-arguments:
+  --post/-po
       --no-public/-np        switch gist visibility to private
 
       --description/-desc    description for the gist
-    
-   --patch/-pa
+
+  --patch/-pa
       --gist-id/-gi          gist-id for the gist
 
-   For more usage help, check out https://www.github.com/justaus3r/ceg/#examples
-
+For more usage help, check out https://www.github.com/justaus3r/ceg/#examples
 
 Examples
 --------
@@ -156,12 +155,16 @@ you can also update the gist description by passing ``--description/-desc NEWDES
 
 Listing public/secret(private) gists
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You can list all of your gists, which will be beautified before printing to stdout. please note that if you are not authenticated(not giving GitHub secret key) then you can use ``--list-other/-lo`` but you will only be shown public gists.
+You can list all of your gists, which will be beautified before printing to stdout. please note that if you are not authenticated(not giving GitHub secret key) then you can use ``--list-other/-lo`` but you will only be shown public gists.[1]_
 ::
 
     $ ceg -l
       # or
-    $ ceg -lo Justaus3r
+      ceg -lo "Justaus3r"
+      # 0.5.0 ownwards
+    $ ceg -l "user:Justaus3r"
+
+.. [1] This syntax has been changed ownwards 0.5.0.
 
 Downloading a gist
 ~~~~~~~~~~~~~~~~~~
@@ -169,8 +172,10 @@ You can download an arbitrary amount of gists in one go! just pass their ``gist-
 ::
     
     $ ceg -g gistid1 gistid2 gistid3
-
-**Note**: Only works for authenticated users, for now, and is planned to change for the next releases.
+      # or(0.5.0 ownwards)
+      ceg -g "user:Justaus3r" gistid1 gistid2
+      
+**Note**: changed in 0.5.0. now unauthenticated users can also download gists(public only).
 
 Deleting a gist
 ~~~~~~~~~~~~~~~
@@ -181,10 +186,12 @@ You can delete multiple gists by simpling passing their ``gist-id``.
 
 Backing up all gists
 ~~~~~~~~~~~~~~~~~~~~
-All user gists can be backed up, only by using a single command. only authenticated users can use this feature for now but that might change in future releases.
+All user gists can be backed up, only by using a single command.
 ::
 
     $ ceg -bk
+      # or (0.5.0 ownwards)
+      ceg -bk "user:Justaus3r"
 
 Silent mode
 ~~~~~~~~~~~
