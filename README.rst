@@ -49,7 +49,7 @@ A gist **<c**>reate/**<r**>ead/**<u**>pdate/**<d**>elete (crud) utility(pronounc
 
 1. Creating gist(s).
 2. Modifying existing gist(s).
-3. Downloading gist(s).[1]_
+3. Downloading gist(s). [1]_
 4. Listing public/secret gists for authenticated users as well as for unauthenticated users(only public).
 5. Deleting gist(s).
 6. Creating a local backup of all the gists(for authenticated users).
@@ -155,7 +155,7 @@ you can also update the gist description by passing ``--description/-desc NEWDES
 
 Listing public/secret(private) gists
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You can list all of your gists, which will be beautified before printing to stdout. please note that if you are not authenticated(not giving GitHub secret key) then you can use ``--list-other/-lo`` but you will only be shown public gists.[1]_
+You can list all of your gists, which will be beautified before printing to stdout. please note that if you are not authenticated(not giving GitHub secret key) then you can use ``--list-other/-lo`` but you will only be shown public gists. [1]_
 ::
 
     $ ceg -l
