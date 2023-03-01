@@ -125,7 +125,7 @@ class CegApi:
             Returns HTTP call response status in string format.
         """
         self.ceg_instance.http_operation = "get"
-        self.ceg_instance.arg_val = list(("user:" + username, ) + args) if username else list(args)
+        self.ceg_instance.arg_val = list(("user:" + username, ) + args) if username else list(args) #type: ignore
         self.ceg_instance.get()
         return self.ceg_instance.response_status_str
 
