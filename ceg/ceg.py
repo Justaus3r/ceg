@@ -22,7 +22,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """ Main implementation of ceg """
 
+import re
 import os
+import sys
 import json
 import requests
 from .logger import Logger
@@ -30,7 +32,7 @@ from rich.tree import Tree
 from rich.console import Console
 from .exceptions import GenericReturnCodes, CegExceptions
 from .misc import Misc, FileHandler, open_file, gist_filename_validated
-from typing import List, Tuple, Dict, Optional, Union, Callable
+from typing import List, Tuple, Dict, Optional, Union, Callable, Any
 
 console: Console = Console()
 
@@ -160,6 +162,7 @@ class Ceg:
         gist_id: String containing gist-id.
         response_status_str: Contains HTTP call response status in string format.
         logger: Logger object.
+        ceg_get_namespace: a namespace containing states and responses relating to Ceg.get()
     """
 
     def __init__(
@@ -191,6 +194,12 @@ class Ceg:
         self.end_point: str = "https://api.github.com/gists"
         self.payload: Dict[str, Union[Dict[str, Dict[str, str]], bool, str]] = {}
         self.logger: Logger = Logger(send_log=do_logging)
+        # ceg_get_namespace["response"] has a ridiculous annotation
+        # so better off using `Any` to please mypy
+        self.ceg_get_namespace: Dict[str, Union[bool, Any]] = {
+            "has_response": False,
+            "response": None,
+        }
 
     def __send_http_request(
         self,
@@ -215,6 +224,7 @@ class Ceg:
             end_point = self.end_point
         if header is None:
             header = self.header
+
         http_operation = getattr(requests, self.http_operation)
         response: requests.models.Response = (
             http_operation(url=end_point, data=params, headers=header)
@@ -351,17 +361,41 @@ class Ceg:
         gist_id: Optional[str]
         do_logging: Optional[bool]
         bypass_recursion: Optional[bool]
+        no_header: bool = False
         gist_id = kwargs.get("gist_id")
         do_logging = kwargs.get("logging_status")
         bypass_recursion = kwargs.get("bypass_recursion")
         hashtable_response: Union[
             int, List[Dict[str, Union[str, Dict[str, str], None, bool, int]]]
         ]
+        match_str: Union[List, str] = (
+            self.arg_val if isinstance(self.arg_val, str) else self.arg_val[0]  # type: ignore
+        )
+        if username_match := re.match("user:\w+", match_str):  # type: ignore
+            if not re.match(
+                "https:\/\/api\.github\.com\/users\/\w+\/gists", self.end_point
+            ):
+                self.end_point = re.sub(
+                    "gists",
+                    f"users/{username_match.group().split(':')[1]}/gists",
+                    self.end_point,
+                )
+                no_header = True
+                if isinstance(self.arg_val, List):
+                    self.arg_val.pop(0)
+
         if gist_id is not None:
             self.logger.info(
                 f"Inquiring for gist with id '{gist_id}'", send_log=do_logging
             )
-        hashtable_response = self.__send_http_request(self.end_point, self.header)
+        if not self.ceg_get_namespace["has_response"]:
+            self.ceg_get_namespace["response"] = self.__send_http_request(
+                self.end_point, self.header, no_header=no_header
+            )
+            self.ceg_get_namespace["has_response"] = True
+
+        hashtable_response = self.ceg_get_namespace["response"]
+
         gist_ids: List[str] = [
             gist.get("id")  # type: ignore
             for gist in hashtable_response  # type: ignore
@@ -436,6 +470,8 @@ class Ceg:
                     self.logger.warning(
                         f"An Error occured while opening '{file}' in default editor."
                     )
+                    files_to_ignore.append(file)
+                    continue
             self.logger.info(f"Validating filename for '{file}'")
             file_basename: str = os.path.basename(file)
             validated: bool = gist_filename_validated(file_basename)
@@ -504,10 +540,13 @@ class Ceg:
         try:
             self.get()
         except requests.exceptions.ConnectionError:
-            dir_handler.return_code = 1
             raise requests.exceptions.ConnectionError(
                 "Connection Error!,please check your internet connection."
             )
+        except Exception:
+            os.chdir("../")
+            dir_handler.return_code = 1
+            raise sys.exc_info()[1]  # type: ignore
         else:
             self.logger.info("Backup successfull!")
 
@@ -520,8 +559,17 @@ class Ceg:
         Returns:
             (Optionally) returns a list containing all gists.
         """
+        prefix: str
+        suffix: str
+        try:
+            prefix, suffix = self.arg_val.split(":")  # type: ignore
+        except ValueError:
+            raise AssertionError(
+                f"Expected username argument of pattern `user:user_name` but got `{self.arg_val}`"
+            )
+        assert prefix == "user"
         user_gist_info: Optional[List[Dict[str, str]]] = self.list(
-            end_point=f"https://api.github.com/users/{self.arg_val}/gists",
+            end_point=f"https://api.github.com/users/{suffix}/gists",
             no_header=True,
         )
         if not self.to_stdout:
@@ -544,7 +592,7 @@ class Ceg:
             ResourceNotFound: raised due to inavailability of inquired resource.
         """
         try:
-            if self.arg_val is None and not self.is_recursive_op:
+            if self.arg_val == "self" and not self.is_recursive_op:
                 self.list()
             elif self.is_other:
                 self.list_other()

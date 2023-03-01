@@ -60,11 +60,13 @@ def ceg_cli() -> None:
         elif arg in Misc.http_intrinsics and arg_val:
             http_operation = arg
             argument_value = arg_val
-        elif arg in ["list", "backup", "list_other"] and arg_val:
+        elif arg in ("list", "backup") and arg_val:
             http_operation = "get"
             is_recursive = True if arg == "backup" else False
-            is_other = True if arg == "list_other" else False
-            argument_value = None if arg in ["list", "backup"] else arg_val
+            is_other = True if (arg == "list" and arg_val != "self") else False
+            argument_value = (
+                None if (arg in ("list", "backup") and arg_val is None) else arg_val
+            )
 
     ceg_obj = Ceg(
         operation=http_operation,

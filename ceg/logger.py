@@ -27,7 +27,7 @@ from rich.logging import RichHandler
 from typing import Union, Any, no_type_check
 
 
-class Logger(logging.getLoggerClass()):
+class Logger(logging.getLoggerClass()):  # type: ignore
     """Logger object responsible for logging all the events.
 
     Inherits from Logger class of stdlib logging library

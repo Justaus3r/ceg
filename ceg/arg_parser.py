@@ -104,18 +104,20 @@ class ArgumentParser(argparse.ArgumentParser):
         group.add_argument(
             "-l",
             "--list",
-            help="list public/private gists for authenticated user",
-            action="store_true",
-        )
-        group.add_argument(
-            "-lo",
-            "--list-other",
-            help="list public gists for unauthenticated users",
-            metavar="USERNAME",
+            help="list public/private gists for a user",
+            metavar="OPT-USERNAME",
             type=str,
+            nargs="?",
+            const="self",
         )
         group.add_argument(
-            "-bk", "--backup", help="create a backup of all gists", action="store_true"
+            "-bk",
+            "--backup",
+            help="create a backup of all gists",
+            metavar="OPT-USERNAME",
+            type=str,
+            nargs="?",
+            const="self",
         )
         self.add_argument(
             "-sk",
