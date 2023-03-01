@@ -49,7 +49,7 @@ A gist **<c**>reate/**<r**>ead/**<u**>pdate/**<d**>elete (crud) utility(pronounc
 
 1. Creating gist(s).
 2. Modifying existing gist(s).
-3. Downloading gist(s). [1]_
+3. Downloading gist(s).[1]_
 4. Listing public/secret gists for authenticated users as well as for unauthenticated users(only public).
 5. Deleting gist(s).
 6. Creating a local backup of all the gists(for authenticated users).
@@ -99,39 +99,39 @@ Usage
 -----
 ::
 
-usage: ceg [options] [sub-arguments]
+   usage: ceg [options] [sub-arguments]
 
-An all in one github's gist manager.
+   An all in one github's gist manager.
 
-options:
-  -h, --help            show this help message and exit
-  -po GISTNAME [GISTNAME ...], --post GISTNAME [GISTNAME ...]
-                        create a gist
-  -pa GISTNAME [GISTNAME ...], --patch GISTNAME [GISTNAME ...]
-                        modify an existing gist
-  -g GISTID [GISTID ...], --get GISTID [GISTID ...]
-                        download gist(s)
-  -d GISTID [GISTID ...], --delete GISTID [GISTID ...]
-                        remove gist(s)
-  -l [OPT-USERNAME], --list [OPT-USERNAME]
-                        list public/private gists for a user
-  -bk [OPT-USERNAME], --backup [OPT-USERNAME]
-                        create a backup of all gists
-  -sk SECRETKEY, --secret-key SECRETKEY
-                        user's github secret key
-  -nl, --no-logging     don't log anything to stdout
-  -v, --version         show utility's semantic version
+   options:
+     -h, --help            show this help message and exit
+     -po GISTNAME [GISTNAME ...], --post GISTNAME [GISTNAME ...]
+                           create a gist
+     -pa GISTNAME [GISTNAME ...], --patch GISTNAME [GISTNAME ...]
+                           modify an existing gist
+     -g GISTID [GISTID ...], --get GISTID [GISTID ...]
+                           download gist(s)
+     -d GISTID [GISTID ...], --delete GISTID [GISTID ...]
+                           remove gist(s)
+     -l [OPT-USERNAME], --list [OPT-USERNAME]
+                           list public/private gists for a user
+     -bk [OPT-USERNAME], --backup [OPT-USERNAME]
+                           create a backup of all gists
+     -sk SECRETKEY, --secret-key SECRETKEY
+                           user's github secret key
+     -nl, --no-logging     don't log anything to stdout
+     -v, --version         show utility's semantic version
 
-sub-arguments:
-  --post/-po
-      --no-public/-np        switch gist visibility to private
+   sub-arguments:
+     --post/-po
+         --no-public/-np        switch gist visibility to private
 
-      --description/-desc    description for the gist
+         --description/-desc    description for the gist
 
-  --patch/-pa
-      --gist-id/-gi          gist-id for the gist
+     --patch/-pa
+         --gist-id/-gi          gist-id for the gist
 
-For more usage help, check out https://www.github.com/justaus3r/ceg/#examples
+   For more usage help, check out https://www.github.com/justaus3r/ceg/#examples
 
 Examples
 --------
