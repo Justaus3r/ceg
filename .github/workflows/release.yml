@@ -31,7 +31,7 @@ jobs:
         run: echo "::set-output name=currversion::$(chmod +x $GITHUB_WORKSPACE/diffver.sh && $GITHUB_WORKSPACE/diffver.sh)"
                 
   Create-Tag-And-Release:
-    if: ${{ needs.Extract-tags.outputs.prevtag != needs.Extract-tags.outputs.currtag }}
+    # if: ${{ needs.Extract-tags.outputs.prevtag != needs.Extract-tags.outputs.currtag }}
     runs-on: ubuntu-latest
     needs:
       Extract-tags
