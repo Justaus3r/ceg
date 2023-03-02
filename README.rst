@@ -41,6 +41,7 @@ Overview
 -   `Similar Projects`_
 -   `Issues`_
 -   `Contribution`_
+-   `Support`_
 -   `License`_
 
 Introduction
@@ -225,6 +226,11 @@ Contribution
     
 All kinds of contributions are welcomed. though please be mindful that this project is statically typed and uses black formatting so please type-check(using ``mypy``) before a PR. I haven't yet added ``py.typed``, nor is the project type-checked at installation |strikestart| or any workflows setup to do so |strikeexit| (now we actually do type checking using workflow) because I am too lazy. tho I plan to do that. also, note that
 `conventional commits`_ and `semantic versioning`_ are used for git commits/versioning.
+
+
+Support
+-------
+if you like the project, you can show appreciation by giving it a star.
 
 License
 -------
