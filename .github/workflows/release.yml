@@ -32,7 +32,7 @@ jobs:
                 
   Create-Tag-And-Release:
     if: ${{ needs.Extract-tags.outputs.prevtag != needs.Extract-tags.outputs.currtag }}
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs:
       Extract-tags
     
@@ -47,11 +47,21 @@ jobs:
         uses: rickstaa/action-create-tag@v1
         with:
           tag: ${{ needs.Extract-tags.outputs.currtag }}
-          
+
+      - name: Create Windows Binary
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - uses: Nuitka/Nuitka-Action@v0.4
+        with:
+          script-name: $GITHUB_WORKSPACE/ceg.py
+          onefile: true
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ needs.Extract-tags.outputs.currtag }}
+          files: $GITHUB_WORKSPACE/build/ceg.exe
           generate_release_notes: true
 
   Typecheck-And-Pubish-Release-To-Pypi:
@@ -65,6 +75,7 @@ jobs:
         with:
           python-version: '3.10'
       - run: |
+            rm -rf $GITHUB_WORKSPACE/ceg.py
             python3 -m pip install mypy poetry rich
             poetry install
             mypy $GITHUB_WORKSPACE/ceg --install-types --non-interactive
