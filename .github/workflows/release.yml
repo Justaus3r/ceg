@@ -37,6 +37,9 @@ jobs:
       Extract-tags
     
     steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -47,11 +50,6 @@ jobs:
         uses: rickstaa/action-create-tag@v1
         with:
           tag: ${{ needs.Extract-tags.outputs.currtag }}
-
-      - name: Setup Python
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
           
       - name: Create Windows Binary
       - uses: Nuitka/Nuitka-Action@v0.4
