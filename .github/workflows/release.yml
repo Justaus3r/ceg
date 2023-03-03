@@ -35,7 +35,7 @@ jobs:
     runs-on: windows-latest
     needs:
       Extract-tags
-    
+      
     steps:
       - uses: actions/setup-python@v4
         with:
@@ -53,7 +53,7 @@ jobs:
           tag: ${{ needs.Extract-tags.outputs.currtag }}
           
       - name: Create Windows Binary
-      - uses: Nuitka/Nuitka-Action@v0.4
+        uses: Nuitka/Nuitka-Action@v0.4
         with:
           script-name: $GITHUB_WORKSPACE/ceg.py
           onefile: true
