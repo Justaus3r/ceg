@@ -196,7 +196,7 @@ All user gists can be backed up, only by using a single command.
 
 Silent mode
 ~~~~~~~~~~~
-All operations can be performed under the silent mode, under which the logger is turned off and nothing is printed to stdout.
+All operations can be performed under the silent mode, under which the logger is turned off and nothing(including errors) is printed to stdout.
 ::
     
     $ ceg -l -nl
