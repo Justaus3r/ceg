@@ -480,7 +480,7 @@ class Ceg:
                 self.logger.warning(f"{file} will be ignored!")
                 files_to_ignore.append(file)
                 continue
-            with open(file, "r") as r_obj:
+            with open(file, "r", encoding="utf-8") as r_obj:
                 file_content: str = r_obj.read()
             file_to_content_map.update({file_basename: {"content": file_content}})
             if is_patch and new_filenames.get(file_basename):  # type: ignore
