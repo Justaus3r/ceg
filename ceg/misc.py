@@ -147,7 +147,7 @@ class FileHandler:
                 os.rmdir(self.__dir_name)
 
     def write(self, file_name: str, content: str) -> None:
-        with open(os.path.join(self.__dir_name, file_name), "w") as wr:
+        with open(os.path.join(self.__dir_name, file_name), "w", encoding="utf-8") as wr:
             wr.write(content)
 
 
