@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "ceg"
+version = "0.5.3"
+description = "A simple gist crud utility."
+license = "GPL-3.0-or-later"
+authors = ["Justaus3r <x-neron@pm.me>"]
+readme = "README.rst"
+repository = "https://www.github.com/justaus3r/ceg"
+keywords = ["gist", "cli", "api"]
+classifiers = [
+    "Environment :: Console",
+    "Topic :: Internet :: WWW/HTTP",
+    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+rich = "^12.5.1"
+requests = "^2.28.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+mypy = "^0.971"
+
+[tool.poetry.scripts]
+ceg = "ceg.cli:ceg_cli"
+
+[tools.poetry.urls]
+"Bug Tracker" = "https://github.com/ceg/issues"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
