@@ -59,7 +59,7 @@ For more usage help, check out https://www.github.com/justaus3r/ceg/#examples"""
     DESCRIPTION: str = "An all in one github's gist manager."
     # Caution(message to myself): Be careful when updating the version because
     # wrong updates can be a mess.
-    VERSION: str = "0.5.3"
+    VERSION: str = "0.5.4"
 
 
 def exception_executioner(exception_obj) -> None:
