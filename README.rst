@@ -234,7 +234,7 @@ if you like the project, you can show appreciation by giving it a star.
 
 License
 -------
-This project is distributed under "GNU General Public License v3.0",and can be distributed with its later versions.
+This project is distributed under "Apache NON-AI License, Version 2.0",and can be distributed with its later versions.
 
 .. _`Api documentation`: https://justaus3r.github.io/ceg/ceg.html
 .. _PYPI: https://pypi.org/project/ceg/
